@@ -1,0 +1,9 @@
+{
+    "watch": [
+      "src",
+      "../frontend"
+    ],
+    "ext": ".ts,.js,.html, .env",
+    "ignore": [],
+    "exec": "ts-node --swc src/index.ts"
+}

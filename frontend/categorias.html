@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cadastro e Listagem de Categorias</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h3>Cadastro de Categoria</h3>
+        <form id="categoriaForm">
+          <input type="hidden" id="categoriaId" value="">
+          <div class="form-group">
+            <label for="nome_categoria">Nome da Categoria:</label>
+            <input type="text" class="form-control" id="nome_categoria" required>
+          </div>
+          <div class="form-group">
+            <label for="descricao">Descrição:</label>
+            <input type="text" class="form-control" id="descricao" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-8">
+        <h3>Listagem de Categorias</h3>
+        <table class="table mt-4">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="categoriasTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  <script>
+    const API_URL = `${window.location.origin}/`;
+    let editCategoriaId = null;
+    let categorias = []; // Definindo categorias como um array vazio
+
+    // Função para cadastrar/alterar categoria
+    async function cadastrarCategoria(event) {
+      event.preventDefault();
+
+      const categoriaId = document.getElementById('categoriaId').value;
+      const nome_categoria = document.getElementById('nome_categoria').value;
+      const descricao = document.getElementById('descricao').value;
+
+      // Obter o token de autenticação do armazenamento local (localStorage)
+      const token = localStorage.getItem('token');
+
+      // Criar um objeto Categoria
+      const categoria = {
+        id_categoria: categoriaId,
+        nome_categoria,
+        descricao
+      };
+
+      // URL para a API de acordo com a ação (criação ou edição)
+      let url = API_URL + 'category';
+      let method = 'POST';
+      if (categoriaId) {
+        url += `/${categoriaId}`;
+        method = 'PUT';
+      }
+
+      // Chamar a API de cadastro/edição de categoria com o token de autenticação
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(categoria)
+      });
+
+      if (response.ok) {
+        alert('Categoria salva com sucesso!');
+        // Limpar os campos do formulário
+        document.getElementById('categoriaId').value = '';
+        document.getElementById('nome_categoria').value = '';
+        document.getElementById('descricao').value = '';
+
+        // Fechar o modal de edição
+        $('#categoriaModal').modal('hide');
+
+        // Atualizar a lista de categorias
+        listarCategorias();
+      } else {
+        alert('Erro ao salvar a categoria. Por favor, tente novamente.');
+      }
+    }
+
+    // Função para listar as categorias
+    async function listarCategorias() {
+      // Obter o token de autenticação do armazenamento local (localStorage)
+      const token = localStorage.getItem('token');
+
+      // Chamar a API para obter a lista de categorias com o token de autenticação
+      const response = await fetch(API_URL + 'category', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        categorias = await response.json(); // Armazenar as categorias no array categorias
+        const tableBody = document.getElementById('categoriasTableBody');
+        tableBody.innerHTML = '';
+
+        categorias.forEach(categoria => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${categoria.id_categoria}</td>
+            <td>${categoria.nome_categoria}</td>
+            <td>${categoria.descricao}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="editarCategoria(${categoria.id_categoria})">Editar</button>
+              <button class="btn btn-danger btn-sm" onclick="excluirCategoria(${categoria.id_categoria})">Excluir</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } else {
+        alert('Erro ao listar as categorias. Por favor, tente novamente.');
+      }
+    }
+
+    // Função para editar uma categoria
+    function editarCategoria(categoriaId) {
+      const categoria = categorias.find(c => c.id_categoria === categoriaId);
+      if (categoria) {
+        document.getElementById('categoriaId').value = categoria.id_categoria;
+        document.getElementById('nome_categoria').value = categoria.nome_categoria;
+        document.getElementById('descricao').value = categoria.descricao;
+
+        // Abrir o modal de edição
+        $('#categoriaModal').modal('show');
+      }
+    }
+
+    // Função para excluir uma categoria
+    async function excluirCategoria(categoriaId) {
+      // Obter o token de autenticação do armazenamento local (localStorage)
+      const token = localStorage.getItem('token');
+
+      // Chamar a API para excluir a categoria com o token de autenticação
+      const response = await fetch(API_URL + `category/${categoriaId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        alert('Categoria excluída com sucesso!');
+        listarCategorias();
+      } else {
+        alert('Erro ao excluir a categoria. Por favor, tente novamente.');
+      }
+    }
+
+    // Event listener para o formulário de categoria
+    document.getElementById('categoriaForm').addEventListener('submit', cadastrarCategoria);
+
+    // Chamar a função listarCategorias quando a página é carregada
+    listarCategorias();
+  </script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Controle de Patrimônio</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <h3>Cadastro de Patrimônio</h3>
+          <form id="patrimonioForm">
+            <div class="form-group">
+              <label for="nome_patrimonio">Nome do Patrimônio:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nome_patrimonio"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="descricao">Descrição:</label>
+              <input type="text" class="form-control" id="descricao" required />
+            </div>
+            <div class="form-group">
+              <label for="historico_manutencao">Histórico de Manutenção:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="historico_manutencao"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="nr_serie">Número de Série:</label>
+              <input type="text" class="form-control" id="nr_serie" required />
+            </div>
+            <div class="form-group">
+              <label for="categoria">Categoria:</label>
+              <select
+                class="form-control"
+                id="categoria"
+                name="categoria"
+                required
+              >
+                <option value="" disabled selected hidden>
+                  Selecione a categoria
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="local_patrimonio">Local de Patrimônio:</label>
+              <select
+                class="form-control"
+                id="local_patrimonio"
+                name="local_patrimonio"
+                required
+              >
+                <option value="" disabled selected hidden>
+                  Selecione o local de patrimônio
+                </option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+          </form>
+        </div>
+      </div>
+      <div class="row mt-5 justify-content-center">
+        <div class="col-md-12">
+          <h3>Patrimônios Cadastrados</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Descrição</th>
+                  <th>Histórico de Manutenção</th>
+                  <th>Número de Série</th>
+                  <th>Categoria</th>
+                  <th>Local do Patrimônio</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="patrimonioTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+      let categorias = [];
+      async function cadastrarPatrimonio(event) {
+        event.preventDefault();
+        const nome_patrimonio =
+          document.getElementById("nome_patrimonio").value;
+        const descricao = document.getElementById("descricao").value;
+        const historico_manutencao = document.getElementById(
+          "historico_manutencao"
+        ).value;
+        const nr_serie = document.getElementById("nr_serie").value;
+        const id_categoria = document.getElementById("categoria").value;
+        const id_local_patrimonio =
+          document.getElementById("local_patrimonio").value;
+        const token = localStorage.getItem("token");
+        const patrimonio = {
+          nome_patrimonio,
+          descricao,
+          historico_manutencao,
+          nr_serie,
+          id_categoria,
+          id_local_patrimonio,
+        };
+        console.log(id_local_patrimonio);
+        const response = await fetch("http://localhost:3001/patrimony", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(patrimonio),
+        });
+        if (response.ok) {
+          alert("Patrimônio cadastrado com sucesso!");
+          document.getElementById("nome_patrimonio").value = "";
+          document.getElementById("descricao").value = "";
+          document.getElementById("historico_manutencao").value = "";
+          document.getElementById("nr_serie").value = "";
+          document.getElementById("categoria").selectedIndex = 0; // Reseta o campo de seleção
+          document.getElementById("local_patrimonio").selectedIndex = 0; // Reseta o campo de seleção
+          carregarPatrimonios();
+        } else {
+          const error = await response.json();
+          alert("Erro ao cadastrar patrimônio: " + error.error);
+        }
+      }
+      async function carregarCategorias() {
+        const response = await fetch("http://localhost:3001/category");
+        categorias = await response.json();
+
+        const categoriaSelect = document.getElementById("categoria");
+        categoriaSelect.innerHTML = "";
+
+        categorias.forEach((categoria) => {
+          const option = document.createElement("option");
+          option.value = categoria.id_categoria;
+          option.textContent = categoria.nome_categoria;
+          categoriaSelect.appendChild(option);
+        });
+      }
+      async function carregarLocaisPatrimonio() {
+        const response = await fetch("http://localhost:3001/local-patrimony");
+        const locaisPatrimonio = await response.json();
+        const select = document.getElementById("local_patrimonio");
+        select.innerHTML =
+          '<option value="" disabled selected hidden>Selecione o local de patrimônio</option>';
+        locaisPatrimonio.forEach((localPatrimonio) => {
+          const option = document.createElement("option");
+          option.value = localPatrimonio.id_local_patrimonio;
+          option.innerText = localPatrimonio.nome_local;
+          select.appendChild(option);
+        });
+      }
+      async function carregarPatrimonios() {
+        const response = await fetch("http://localhost:3001/patrimony");
+        const patrimonios = await response.json();
+        const tbody = document.getElementById("patrimonioTableBody");
+        tbody.innerHTML = "";
+        patrimonios.forEach(async (patrimonio) => {
+          const tr = document.createElement("tr");
+          const tdId = document.createElement("td");
+          tdId.innerText = patrimonio.id_patrimonio;
+          tr.appendChild(tdId);
+          const tdNome = document.createElement("td");
+          tdNome.innerText = patrimonio.nome_patrimonio;
+          tr.appendChild(tdNome);
+          const tdDescricao = document.createElement("td");
+          tdDescricao.innerText = patrimonio.descricao;
+          tr.appendChild(tdDescricao);
+          const tdHistorico = document.createElement("td");
+          tdHistorico.innerText = patrimonio.historico_manutencao;
+          tr.appendChild(tdHistorico);
+          const tdNrSerie = document.createElement("td");
+          tdNrSerie.innerText = patrimonio.nr_serie;
+          tr.appendChild(tdNrSerie);
+          const tdCategoria = document.createElement("td");
+          tdCategoria.innerText = await obterNomeCategoria(
+            patrimonio.id_categoria
+          );
+          tr.appendChild(tdCategoria);
+          const tdLocal = document.createElement("td");
+          tdLocal.innerText = await obterNomeLocalPatrimonio(
+            patrimonio.id_local_patrimonio
+          );
+          tr.appendChild(tdLocal);
+          const tdAcoes = document.createElement("td");
+          const btnExcluir = document.createElement("button");
+          btnExcluir.innerText = "Excluir";
+          btnExcluir.classList.add("btn", "btn-danger", "mr-2");
+          btnExcluir.onclick = () =>
+            excluirPatrimonio(patrimonio.id_patrimonio);
+          tdAcoes.appendChild(btnExcluir);
+          const btnEditar = document.createElement("button");
+          btnEditar.innerText = "Editar";
+          btnEditar.classList.add("btn", "btn-primary");
+          btnEditar.onclick = () => editarPatrimonio(patrimonio);
+          tdAcoes.appendChild(btnEditar);
+          tr.appendChild(tdAcoes);
+          tbody.appendChild(tr);
+        });
+      }
+      async function obterNomeCategoria(id_categoria) {
+        const response = await fetch(
+          `http://localhost:3001/categories/${id_categoria}`
+        );
+        const categoria = await response.json();
+        return categoria.nome_categoria;
+      }
+      async function obterNomeLocalPatrimonio(id_local_patrimonio) {
+        const response = await fetch(`http://localhost:3001/local-patrimony/`);
+        const locaisPatrimonio = await response.json();
+        const localPatrimonio = locaisPatrimonio.find(
+          (local) => local.id_local_patrimonio === id_local_patrimonio
+        );
+        return localPatrimonio ? localPatrimonio.nome_local : "";
+      }
+
+      async function excluirPatrimonio(idPatrimonio) {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `http://localhost:3001/patrimony/${idPatrimonio}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          alert("Patrimônio excluído com sucesso!");
+          carregarPatrimonios();
+        } else {
+          const error = await response.json();
+          alert("Erro ao excluir patrimônio: " + error.error);
+        }
+      }
+      function limparFormulario() {
+        document.getElementById("nome_patrimonio").value = "";
+        document.getElementById("descricao").value = "";
+        document.getElementById("historico_manutencao").value = "";
+        document.getElementById("nr_serie").value = "";
+        document.getElementById("categoria").selectedIndex = 0; // Reseta o campo de seleção
+        document.getElementById("local_patrimonio").selectedIndex = 0; // Reseta o campo de seleção
+      }
+
+      function editarPatrimonio(patrimonio) {
+        document.getElementById("nome_patrimonio").value =
+          patrimonio.nome_patrimonio;
+        document.getElementById("descricao").value = patrimonio.descricao;
+        document.getElementById("historico_manutencao").value =
+          patrimonio.historico_manutencao;
+        document.getElementById("nr_serie").value = patrimonio.nr_serie;
+        document.getElementById("categoria").value = patrimonio.id_categoria;
+        document.getElementById("local_patrimonio").value =
+          patrimonio.id_local_patrimonio;
+
+        const salvarButton = document.getElementById("salvarButton");
+        salvarButton.textContent = "Atualizar";
+        salvarButton.removeEventListener("click", cadastrarPatrimonio);
+        salvarButton.addEventListener("click", () =>
+          atualizarPatrimonio(patrimonio.id_patrimonio)
+        );
+      }
+
+      async function atualizarPatrimonio(idPatrimonio) {
+        const nome_patrimonio =
+          document.getElementById("nome_patrimonio").value;
+        const descricao = document.getElementById("descricao").value;
+        const historico_manutencao = document.getElementById(
+          "historico_manutencao"
+        ).value;
+        const nr_serie = document.getElementById("nr_serie").value;
+        const id_categoria = document.getElementById("categoria").value;
+        const id_local_patrimonio =
+          document.getElementById("local_patrimonio").value;
+        const token = localStorage.getItem("token");
+        const patrimonio = {
+          nome_patrimonio,
+          descricao,
+          historico_manutencao,
+          nr_serie,
+          id_categoria,
+          id_local_patrimonio,
+        };
+
+        const response = await fetch(
+          `http://localhost:3001/patrimony/${idPatrimonio}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(patrimonio),
+          }
+        );
+
+        if (response.ok) {
+          alert("Patrimônio atualizado com sucesso!");
+          document.getElementById("nome_patrimonio").value = "";
+          document.getElementById("descricao").value = "";
+          document.getElementById("historico_manutencao").value = "";
+          document.getElementById("nr_serie").value = "";
+          document.getElementById("categoria").selectedIndex = 0; // Reseta o campo de seleção
+          document.getElementById("local_patrimonio").selectedIndex = 0; // Reseta o campo de seleção
+          carregarPatrimonios();
+          const form = document.getElementById("patrimonioForm");
+          const btnCadastrar = form.querySelector("button[type='submit']");
+          btnCadastrar.innerText = "Cadastrar";
+          form.removeEventListener("submit", atualizarPatrimonio);
+          form.addEventListener("submit", cadastrarPatrimonio);
+        } else {
+          const error = await response.json();
+          alert("Erro ao atualizar patrimônio: " + error.error);
+        }
+        window.location.reload();
+      }
+
+      document
+        .getElementById("patrimonioForm")
+        .addEventListener("submit", cadastrarPatrimonio);
+      carregarCategorias();
+      carregarLocaisPatrimonio();
+      carregarPatrimonios();
+    </script>
+  </body>
+</html>
