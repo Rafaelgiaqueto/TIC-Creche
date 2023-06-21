@@ -1,46 +1,93 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Controle de Patrimônio</title>
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <h3>Cadastro de Local de Patrimônio</h3>
-          <form id="localPatrimonioForm">
-            <div class="form-group">
-              <label for="nome_local">Nome do Local:</label>
-              <input
-                type="text"
-                class="form-control"
-                id="nome_local"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="descricao">Descrição:</label>
-              <input type="text" class="form-control" id="descricao" required />
-            </div>
-            <button type="submit" class="btn btn-primary" id="salvarButton">
-              Cadastrar
-            </button>
-            <button type="button" class="btn btn-secondary" id="cancelarButton">
-              Cancelar
-            </button>
-          </form>
-        </div>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="custom.css">
+  <title>Locais</title>
+</head>
+<body style="background-color: #E4E4E4">
+  <!--sidedrawer menu-->
+  <div id="side-drawer" class="position-fixed">
+    <div class="h-100 bg-white">
+      <div class="row align-items-center p-4">
+        <div class="col-10"><h1 class="title">Menu</h1></div>
+        <div class="col-2"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="closeSideDrawer()"></button></div>
       </div>
-      <div class="row mt-5 justify-content-center">
-        <div class="col-md-12">
-          <h3>Locais de Patrimônio Cadastrados</h3>
-          <div class="table-responsive">
-            <table class="table">
+      <ul class="list-group" onclick="closeSideDrawer()">
+        <a href="dashboard.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/home.png" alt="início"><div class="media-body"><h5 class="mt-0 mb-1">Início</h5></div></li></a>
+        <a href="/patrimonio.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/patrimonio.png" alt="patrimônio"><div class="media-body"><h5 class="mt-0 mb-1">Patrimônio</h5></div></li></a>
+        <a href="/usuarios.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/user.png" alt="usuarios"><div class="media-body"><h5 class="mt-0 mb-1">Usuários</h5></div></li></a>
+        <a href="/local.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/sala-2.png" alt="local"><div class="media-body"><h5 class="mt-0 mb-1">Locais</h5></div></li></a>
+        <a href="/categorias.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="categorias"><div class="media-body"><h5 class="mt-0 mb-1">Categorias</h5></div></li></a>
+        <a href="/avarias.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="avarias"><div class="media-body"><h5 class="mt-0 mb-1">Avarias</h5></div></li></a>
+        <a href="/manutencao.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="manutenção"><div class="media-body"><h5 class="mt-0 mb-1">Manutenção</h5></div></li></a>
+        <a href="/empresamanutencao.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="empresas de manutenção"><div class="media-body"><h5 class="mt-0 mb-1">Empresas de manutenção</h5></div></li></a>
+        <a href="/configuracoes.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="configurações"><div class="media-body"><h5 class="mt-0 mb-1">Configurações</h5></div></li></a>
+        <a href="#" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/logout.png" alt="início"><div class="media-body"><h5 class="mt-0 mb-1">Sair</h5></div></li></a>
+      </ul>
+    </div>
+  </div>
+  <div class="position-absolute w-100" style="bottom: 0">
+  </div>
+  <div id="side-drawer-void" class="position-fixed d-none" onclick="closeSideDrawer()"></div>
+  <!--header-->
+  <header style="height: 75px; background-color: #3D90D5;">
+    <span class="navbar-text p-0">
+      <div class="row-flex">
+        <div class="col-12 p-0"><img src="images/logo.jpg" style="max-width:25%;" alt="Logo"></div>
+      </div>
+    </span>
+  </header>
+  <!--sidebar toggler-->
+  <nav class="navbar navbar-dark" style="height: 65px; background-color: #3D90D5; max-width: 50%; border-end-end-radius: 3rem;">
+    <button class="navbar-toggler" type="button" onclick="openSideDrawer()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <!--quadro branco-->
+  <main class="container col-md-10 mb-4 bg-white">
+    <div class="p-4 p-md-5">
+        <div class="row"><p class="fs-1 col-12">Locais</p></div>
+        <p>Aqui você poderá editar e cadastrar salas e outros locais da creche.</p>
+        <div class="mb-4"><!-- botão abrir modal -->
+          <button type="button" class="btn" style="background-color: #3D90D5; color:white;" data-bs-toggle="modal" data-bs-target="#cadastroModal"><b>Cadastrar locais</b></button>
+        </div>
+        <div>
+          <!-- Modal -->
+          <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Cadastrar salas</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form class="border p-3 m-3" id="localPatrimonioForm">
+                              <input id="id" hidden>
+                              <div class="mb-3 mt-4">
+                                  <label for="nome_local" class="form-label">Nome do local:</label>
+                                  <input class="form-control w-50" type="text" id="nome_local" required/>
+                              </div>
+                              <div class="mb-3 mt-4">
+                                <label for="descricao">Descrição:</label>
+                                <input type="text" class="form-control w-50" id="descricao" required />
+                              </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button id="salvarButton" type="submit" class="btn" style="background-color: #3D90D5; color:white;" onClick="cadastrarLocalPatrimonio(event)">Salvar</button>
+                          <button id="cancelarButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick="cancelarEdicao()">Fechar</button>
+                        </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div>
+          <table class="table table-hover">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -49,222 +96,238 @@
                   <th>Ações</th>
                 </tr>
               </thead>
-              <tbody id="localPatrimonioTableBody"></tbody>
+              <tbody id="localPatrimonioTableBody" class="table-group-divider"></tbody>
             </table>
-          </div>
-        </div>
       </div>
     </div>
+  </main>
+  <!--script sidedrawer-->
+  <script>
+    function openSideDrawer() {
+    document.getElementById("side-drawer").style.left = "0";
+    document.getElementById("side-drawer-void").classList.add("d-block");
+    document.getElementById("side-drawer-void").classList.remove("d-none");
+    }
 
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    function closeSideDrawer() {
+    document.getElementById("side-drawer").style.left = "-336px";
+    document.getElementById("side-drawer-void").classList.add("d-none");
+    document.getElementById("side-drawer-void").classList.remove("d-block");
+    }
 
-    <script>
-      const API_URL = `${window.location.origin}/`;
+    window.openSideDrawer = openSideDrawer;
+    window.closeSideDrawer = closeSideDrawer;
+  </script>
+  <script>
+    const API_URL = `${window.location.origin}/`;
 
-      async function verificarNomeDuplicado(
-        nome_local,
-        id_local_patrimonio = null
-      ) {
-        const response = await fetch(
-          API_URL + "local-patrimony?nome_local=" + nome_local
+    async function verificarNomeDuplicado(
+      nome_local,
+      id_local_patrimonio = null
+    ) {
+      const response = await fetch(
+        API_URL + "local-patrimony?nome_local=" + nome_local
+      );
+      const locaisPatrimonio = await response.json();
+
+      // Verifica se já existe um local de patrimônio com o mesmo nome, excluindo o atual em caso de edição
+      if (id_local_patrimonio) {
+        return locaisPatrimonio.some(
+          (localPatrimonio) =>
+            localPatrimonio.nome_local.toLowerCase() ===
+              nome_local.toLowerCase() &&
+            localPatrimonio.id_local_patrimonio !== id_local_patrimonio
         );
-        const locaisPatrimonio = await response.json();
+      } else {
+        return locaisPatrimonio.some(
+          (localPatrimonio) =>
+            localPatrimonio.nome_local.toLowerCase() ===
+            nome_local.toLowerCase()
+        );
+      }
+    }
 
-        // Verifica se já existe um local de patrimônio com o mesmo nome, excluindo o atual em caso de edição
-        if (id_local_patrimonio) {
-          return locaisPatrimonio.some(
-            (localPatrimonio) =>
-              localPatrimonio.nome_local.toLowerCase() ===
-                nome_local.toLowerCase() &&
-              localPatrimonio.id_local_patrimonio !== id_local_patrimonio
-          );
-        } else {
-          return locaisPatrimonio.some(
-            (localPatrimonio) =>
-              localPatrimonio.nome_local.toLowerCase() ===
-              nome_local.toLowerCase()
-          );
-        }
+    async function cadastrarLocalPatrimonio(event) {
+      event.preventDefault();
+
+      const nome_local = document.getElementById("nome_local").value;
+      const descricao = document.getElementById("descricao").value;
+
+      const token = localStorage.getItem("token");
+
+      // Verifica se o nome já está em uso, excluindo o atual em caso de edição
+      const id_local_patrimonio = document
+        .getElementById("salvarButton")
+        .getAttribute("data-id");
+      const nomeDuplicado = await verificarNomeDuplicado(
+        nome_local,
+        id_local_patrimonio
+      );
+      if (nomeDuplicado) {
+        alert(
+          "Erro ao cadastrar local de patrimônio: O nome já está em uso."
+        );
+        return; // Impede o cadastro
       }
 
-      async function cadastrarLocalPatrimonio(event) {
-        event.preventDefault();
+      const localPatrimonio = {
+        nome_local,
+        descricao,
+      };
 
-        const nome_local = document.getElementById("nome_local").value;
-        const descricao = document.getElementById("descricao").value;
-
-        const token = localStorage.getItem("token");
-
-        // Verifica se o nome já está em uso, excluindo o atual em caso de edição
-        const id_local_patrimonio = document
-          .getElementById("salvarButton")
-          .getAttribute("data-id");
-        const nomeDuplicado = await verificarNomeDuplicado(
-          nome_local,
-          id_local_patrimonio
-        );
-        if (nomeDuplicado) {
-          alert(
-            "Erro ao cadastrar local de patrimônio: O nome já está em uso."
-          );
-          return; // Impede o cadastro
-        }
-
-        const localPatrimonio = {
-          nome_local,
-          descricao,
-        };
-
-        if (id_local_patrimonio) {
-          // Modo de edição
-          const response = await fetch(
-            API_URL + `local-patrimony/${id_local_patrimonio}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify(localPatrimonio),
-            }
-          );
-
-          if (response.ok) {
-            alert("Local de patrimônio atualizado com sucesso!");
-            cancelarEdicao();
-          } else {
-            const error = await response.json();
-            alert("Erro ao atualizar local de patrimônio: " + error.error);
-          }
-        } else {
-          // Modo de cadastro
-          const response = await fetch(API_URL + "local-patrimony", {
-            method: "POST",
+      if (id_local_patrimonio) {
+        // Modo de edição
+        const response = await fetch(
+          API_URL + `local-patrimony/${id_local_patrimonio}`,
+          {
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(localPatrimonio),
-          });
-
-          if (response.ok) {
-            alert("Local de patrimônio cadastrado com sucesso!");
-          } else {
-            const error = await response.json();
-            alert("Erro ao cadastrar local de patrimônio: " + error.error);
-          }
-        }
-
-        document.getElementById("nome_local").value = "";
-        document.getElementById("descricao").value = "";
-        cancelarEdicao();
-        carregarLocaisPatrimonio();
-      }
-
-      async function carregarLocaisPatrimonio() {
-        const response = await fetch(API_URL + "local-patrimony");
-        const locaisPatrimonio = await response.json();
-
-        const tableBody = document.getElementById("localPatrimonioTableBody");
-        tableBody.innerHTML = "";
-
-        locaisPatrimonio.forEach((localPatrimonio) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-          <td>${localPatrimonio.id_local_patrimonio}</td>
-          <td>${localPatrimonio.nome_local}</td>
-          <td>${localPatrimonio.descricao}</td>
-          <td>
-            <button type="button" class="btn btn-primary btn-editar" data-id="${localPatrimonio.id_local_patrimonio}">Editar</button>
-            <button type="button" class="btn btn-danger btn-excluir" data-id="${localPatrimonio.id_local_patrimonio}">Excluir</button>
-          </td>
-        `;
-          tableBody.appendChild(row);
-        });
-
-        const editarButtons = document.querySelectorAll(".btn-editar");
-        const excluirButtons = document.querySelectorAll(".btn-excluir");
-
-        editarButtons.forEach((button) => {
-          button.addEventListener("click", editarLocalPatrimonio);
-        });
-
-        excluirButtons.forEach((button) => {
-          button.addEventListener("click", excluirLocalPatrimonio);
-        });
-      }
-
-      async function editarLocalPatrimonio(event) {
-        const id_local_patrimonio = event.target.getAttribute("data-id");
-
-        const response = await fetch(
-          API_URL + `local-patrimony/${id_local_patrimonio}`
-        );
-
-        if (response.ok) {
-          const localPatrimonio = await response.json();
-
-          document.getElementById("nome_local").value =
-            localPatrimonio.nome_local;
-          document.getElementById("descricao").value =
-            localPatrimonio.descricao;
-
-          document
-            .getElementById("salvarButton")
-            .setAttribute("data-id", id_local_patrimonio);
-          document.getElementById("salvarButton").textContent = "Atualizar";
-        } else {
-          const error = await response.json();
-          alert(
-            "Erro ao carregar informações do local de patrimônio: " +
-              error.error
-          );
-        }
-      }
-
-      async function excluirLocalPatrimonio(event) {
-        const id_local_patrimonio = event.target.getAttribute("data-id");
-
-        const token = localStorage.getItem("token");
-
-        const response = await fetch(
-          API_URL + `local-patrimony/${id_local_patrimonio}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
           }
         );
 
         if (response.ok) {
-          alert("Local de patrimônio excluído com sucesso!");
-          carregarLocaisPatrimonio();
+          alert("Local de patrimônio atualizado com sucesso!");
+          cancelarEdicao();
         } else {
           const error = await response.json();
-          alert("Erro ao excluir local de patrimônio: " + error.error);
+          alert("Erro ao atualizar local de patrimônio: " + error.error);
+        }
+      } else {
+        // Modo de cadastro
+        const response = await fetch(API_URL + "local-patrimony", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(localPatrimonio),
+        });
+
+        if (response.ok) {
+          alert("Local de patrimônio cadastrado com sucesso!");
+        } else {
+          const error = await response.json();
+          alert("Erro ao cadastrar local de patrimônio: " + error.error);
         }
       }
-
-      function cancelarEdicao() {
-        document.getElementById("nome_local").value = "";
-        document.getElementById("descricao").value = "";
-
-        document.getElementById("salvarButton").removeAttribute("data-id");
-        document.getElementById("salvarButton").textContent = "Cadastrar";
-      }
-
-      document
-        .getElementById("localPatrimonioForm")
-        .addEventListener("submit", cadastrarLocalPatrimonio);
-      document
-        .getElementById("cancelarButton")
-        .addEventListener("click", cancelarEdicao);
-
+      $('#cadastroModal').modal('hide')
+      document.getElementById("nome_local").value = "";
+      document.getElementById("descricao").value = "";
+      cancelarEdicao();
       carregarLocaisPatrimonio();
-    </script>
-  </body>
+    }
+
+    async function carregarLocaisPatrimonio() {
+      const response = await fetch(API_URL + "local-patrimony");
+      const locaisPatrimonio = await response.json();
+
+      const tableBody = document.getElementById("localPatrimonioTableBody");
+      tableBody.innerHTML = "";
+
+      locaisPatrimonio.forEach((localPatrimonio) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+        <td>${localPatrimonio.id_local_patrimonio}</td>
+        <td>${localPatrimonio.nome_local}</td>
+        <td>${localPatrimonio.descricao}</td>
+        <td>
+          <button type="button" class="btn btn-primary btn-editar" data-id="${localPatrimonio.id_local_patrimonio}">Editar</button>
+          <button type="button" class="btn btn-danger btn-excluir" data-id="${localPatrimonio.id_local_patrimonio}">Excluir</button>
+        </td>
+      `;
+        tableBody.appendChild(row);
+      });
+
+      const editarButtons = document.querySelectorAll(".btn-editar");
+      const excluirButtons = document.querySelectorAll(".btn-excluir");
+
+      editarButtons.forEach((button) => {
+        button.addEventListener("click", editarLocalPatrimonio);
+      });
+
+      excluirButtons.forEach((button) => {
+        button.addEventListener("click", excluirLocalPatrimonio);
+      });
+    }
+
+    async function editarLocalPatrimonio(event) {
+      $('#cadastroModal').modal('toggle')
+      const id_local_patrimonio = event.target.getAttribute("data-id");
+
+      const response = await fetch(
+        API_URL + `local-patrimony/${id_local_patrimonio}`
+      );
+      if (response.ok) {
+        const localPatrimonio = await response.json();
+
+        document.getElementById("nome_local").value =
+          localPatrimonio.nome_local;
+        document.getElementById("descricao").value =
+          localPatrimonio.descricao;
+
+        document
+          .getElementById("salvarButton")
+          .setAttribute("data-id", id_local_patrimonio);
+        document.getElementById("salvarButton").textContent = "Atualizar";
+      } else {
+        const error = await response.json();
+        alert(
+          "Erro ao carregar informações do local de patrimônio: " +
+            error.error
+        );
+      }
+    }
+
+    async function excluirLocalPatrimonio(event) {
+      const id_local_patrimonio = event.target.getAttribute("data-id");
+
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        API_URL + `local-patrimony/${id_local_patrimonio}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("Local de patrimônio excluído com sucesso!");
+        carregarLocaisPatrimonio();
+      } else {
+        const error = await response.json();
+        alert("Erro ao excluir local de patrimônio: " + error.error);
+      }
+    }
+
+    function cancelarEdicao() {
+      document.getElementById("nome_local").value = "";
+      document.getElementById("descricao").value = "";
+
+      document.getElementById("salvarButton").removeAttribute("data-id");
+      document.getElementById("salvarButton").textContent = "Cadastrar";
+    }
+
+    document
+      .getElementById("localPatrimonioForm")
+      .addEventListener("submit", cadastrarLocalPatrimonio);
+    document
+      .getElementById("cancelarButton")
+      .addEventListener("click", cancelarEdicao);
+
+    carregarLocaisPatrimonio();
+  </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+</body>
 </html>

@@ -1,245 +1,317 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Cadastro e Listagem de Usuários</title>
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <h3 id="formTitle">Cadastro de Usuário</h3>
-          <form id="usuarioForm">
-            <input type="hidden" id="usuarioId" value="" />
-            <div class="form-group">
-              <label for="nome">Nome:</label>
-              <input type="text" class="form-control" id="nome" required />
-            </div>
-            <div class="form-group">
-              <label for="email">Email:</label>
-              <input type="email" class="form-control" id="email" required />
-            </div>
-            <div class="form-group">
-              <label for="telefone">Telefone:</label>
-              <input type="text" class="form-control" id="telefone" required />
-            </div>
-            <div class="form-group">
-              <label for="senha">Senha:</label>
-              <input type="password" class="form-control" id="senha" required />
-            </div>
-            <button type="submit" id="submitButton" class="btn btn-primary">Salvar</button>
-            <button type="button" id="cancelButton" class="btn btn-secondary">Cancelar</button>
-          </form>
-        </div>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="custom.css">
+  <title>Usuários</title>
+</head>
+<body style="background-color: #E4E4E4">
+  <!--sidedrawer menu-->
+  <div id="side-drawer" class="position-fixed">
+    <div class="h-100 bg-white">
+      <div class="row align-items-center p-4">
+        <div class="col-10"><h1 class="title">Menu</h1></div>
+        <div class="col-2"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="closeSideDrawer()"></button></div>
       </div>
-
-      <div class="row mt-5">
-        <div class="col-md-8">
-          <h3>Listagem de Usuários</h3>
-          <table class="table mt-4">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="usuariosTableBody"></tbody>
-          </table>
+      <ul class="list-group" onclick="closeSideDrawer()">
+        <a href="dashboard.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/home.png" alt="início"><div class="media-body"><h5 class="mt-0 mb-1">Início</h5></div></li></a>
+        <a href="/patrimonio.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/patrimonio.png" alt="patrimônio"><div class="media-body"><h5 class="mt-0 mb-1">Patrimônio</h5></div></li></a>
+        <a href="/usuarios.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/user.png" alt="usuarios"><div class="media-body"><h5 class="mt-0 mb-1">Usuários</h5></div></li></a>
+        <a href="/local.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/sala-2.png" alt="local"><div class="media-body"><h5 class="mt-0 mb-1">Locais</h5></div></li></a>
+        <a href="/categorias.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="categorias"><div class="media-body"><h5 class="mt-0 mb-1">Categorias</h5></div></li></a>
+        <a href="/avarias.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="avarias"><div class="media-body"><h5 class="mt-0 mb-1">Avarias</h5></div></li></a>
+        <a href="/manutencao.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="manutenção"><div class="media-body"><h5 class="mt-0 mb-1">Manutenção</h5></div></li></a>
+        <a href="/empresamanutencao.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="empresas de manutenção"><div class="media-body"><h5 class="mt-0 mb-1">Empresas de manutenção</h5></div></li></a>
+        <a href="/configuracoes.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="configurações"><div class="media-body"><h5 class="mt-0 mb-1">Configurações</h5></div></li></a>
+        <a href="#" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/logout.png" alt="início"><div class="media-body"><h5 class="mt-0 mb-1">Sair</h5></div></li></a>
+      </ul>
+    </div>
+  </div>
+  <div class="position-absolute w-100" style="bottom: 0">
+  </div>
+  <div id="side-drawer-void" class="position-fixed d-none" onclick="closeSideDrawer()"></div>
+  <!--header-->
+  <header style="height: 75px; background-color: #3D90D5;">
+    <span class="navbar-text p-0">
+      <div class="row-flex">
+        <div class="col-12 p-0"><img src="images/logo.jpg" style="max-width:25%;" alt="Logo"></div>
+      </div>
+    </span>
+  </header>
+  <!--sidebar toggler-->
+  <nav class="navbar navbar-dark" style="height: 65px; background-color: #3D90D5; max-width: 50%; border-end-end-radius: 3rem;">
+    <button class="navbar-toggler" type="button" onclick="openSideDrawer()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <!--quadro branco-->
+  <main class="container col-md-10 mb-4 bg-white">
+    <div class="p-4 p-md-5">
+        <div class="row"><p class="fs-1 col-12">Usuários</p></div>
+        <p>Aqui você pode encontrar os usuários cadastrados.</p>
+        <div class="mb-4"><!-- botão abrir modal -->
+            <button type="button" class="btn" style="background-color: #3D90D5; color:white;" data-bs-toggle="modal" data-bs-target="#cadastroModal"><b>Cadastrar usuário</b></button>
         </div>
+        <div>
+            <!-- Modal -->
+            <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Cadastro de Usuário</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form class="border p-3 m-3" id="usuarioForm">
+                            <input type="hidden" id="usuarioId" value="" />
+                            <div class="mb-3 mt-4">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input class="form-control w-50" type="text" id="nome" required/>
+                            </div>
+                            <div class="mb-3">
+                              <label for="telefone" class="form-label">Telefone</label>
+                              <input class="form-control w-50" type="text" id="telefone" required/>
+                            </div>
+                            <div class="mb-3">
+                              <label for="email" class="form-label">E-mail</label>
+                              <input class="form-control w-50" type="email" id="email" required/>
+                            </div>
+                            <div class="mb-3">
+                              <label for="senha" class="form-label">Senha</label>
+                              <input class="form-control w-50" type="password" id="senha" required/>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button id="submitButton" type="submit" class="btn" style="background-color: #3D90D5; color:white;" onClick="cadastrarUsuario(event)">Salvar</button>
+                          <button id="cancelButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick="close">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+          <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Email</th>
+                  <th>Telefone</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="usuariosTableBody" class="table-group-divider"></tbody>
+            </table>
       </div>
     </div>
+  </main>
 
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script>
+    function openSideDrawer() {
+    document.getElementById("side-drawer").style.left = "0";
+    document.getElementById("side-drawer-void").classList.add("d-block");
+    document.getElementById("side-drawer-void").classList.remove("d-none");
+    }
 
-    <script>
-      const API_URL = `${window.location.origin}/`;
-      let usuarios = [];
-      let editUsuarioId = null;
+    function closeSideDrawer() {
+    document.getElementById("side-drawer").style.left = "-336px";
+    document.getElementById("side-drawer-void").classList.add("d-none");
+    document.getElementById("side-drawer-void").classList.remove("d-block");
+    }
 
-      // Função para cadastrar/alterar usuário
-      async function cadastrarUsuario(event) {
-        event.preventDefault();
+    window.openSideDrawer = openSideDrawer;
+    window.closeSideDrawer = closeSideDrawer;
+  </script>
 
-        const usuarioId = document.getElementById("usuarioId").value;
-        const nome = document.getElementById("nome").value;
-        const email = document.getElementById("email").value;
-        const telefone = document.getElementById("telefone").value;
-        const senha = document.getElementById("senha").value;
+  <script>
+    const API_URL = `${window.location.origin}/`;
+    let usuarios = [];
+    let editUsuarioId = null;
 
-        // Criar um objeto Usuário
-        const usuario = {
-          id: usuarioId,
-          nome,
-          email,
-          telefone,
-          senha,
-        };
+    // Função para cadastrar/alterar usuário
+    async function cadastrarUsuario(event) {
+      event.preventDefault();
 
-        // URL para a API de acordo com a ação (criação ou edição)
-        let url = API_URL + "users";
-        let method = "POST";
-        if (usuarioId) {
-          url += `/${usuarioId}`;
-          method = "PUT";
+      const usuarioId = document.getElementById("usuarioId").value;
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const senha = document.getElementById("senha").value;
+
+      // Criar um objeto Usuário
+      const usuario = {
+        id: usuarioId,
+        nome,
+        email,
+        telefone,
+        senha,
+      };
+
+      // URL para a API de acordo com a ação (criação ou edição)
+      let url = API_URL + "users";
+      let method = "POST";
+      if (usuarioId) {
+        url += `/${usuarioId}`;
+        method = "PUT";
+      }
+
+      // Fazer a requisição para a API
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(usuario),
+        });
+
+        if (response.ok) {
+          // Limpar o formulário
+          document.getElementById("usuarioForm").reset();
+
+          // Atualizar a listagem de usuários
+          await carregarUsuarios();
+
+          editUsuarioId = null;
         }
+      } catch (error) {
+        console.error("Erro ao cadastrar/alterar usuário:", error);
+      }
+    }
 
-        // Fazer a requisição para a API
+    // Função para carregar os usuários da API
+    async function carregarUsuarios() {
+      try {
+        const response = await fetch(API_URL + "users");
+        const data = await response.json();
+
+        usuarios = data;
+        renderizarUsuarios();
+      } catch (error) {
+        console.error("Erro ao carregar usuários:", error);
+      }
+    }
+
+    // Função para renderizar a listagem de usuários na tabela
+    function renderizarUsuarios() {
+      const tableBody = document.getElementById("usuariosTableBody");
+      tableBody.innerHTML = "";
+
+      for (const usuario of usuarios) {
+        const row = document.createElement("tr");
+
+        const idCell = document.createElement("td");
+        idCell.textContent = usuario.id;
+        row.appendChild(idCell);
+
+        const nomeCell = document.createElement("td");
+        nomeCell.textContent = usuario.nome;
+        row.appendChild(nomeCell);
+
+        const emailCell = document.createElement("td");
+        emailCell.textContent = usuario.email;
+        row.appendChild(emailCell);
+
+        const telefoneCell = document.createElement("td");
+        telefoneCell.textContent = usuario.telefone;
+        row.appendChild(telefoneCell);
+
+        const acoesCell = document.createElement("td");
+
+        const editarButton = document.createElement("button");
+        editarButton.textContent = "Editar";
+        editarButton.classList.add("btn", "btn-primary", "mr-2");
+        editarButton.addEventListener("click", () => editarUsuario(usuario.id));
+        acoesCell.appendChild(editarButton);
+
+        const excluirButton = document.createElement("button");
+        excluirButton.textContent = "Excluir";
+        excluirButton.classList.add("btn", "btn-danger");
+        excluirButton.addEventListener("click", () => excluirUsuario(usuario.id));
+        acoesCell.appendChild(excluirButton);
+
+        row.appendChild(acoesCell);
+
+        tableBody.appendChild(row);
+      }
+    }
+
+    // Função para preencher o formulário com os dados do usuário a ser editado
+    function editarUsuario(id) {
+      $('#cadastroModal').modal('toggle')
+      const usuario = usuarios.find((user) => user.id === id);
+      if (usuario) {
+        document.getElementById("usuarioId").value = usuario.id;
+        document.getElementById("nome").value = usuario.nome;
+        document.getElementById("email").value = usuario.email;
+        document.getElementById("telefone").value = usuario.telefone;
+        document.getElementById("senha").value = usuario.senha;
+
+        document.getElementById("formTitle").textContent = "Edição de Usuário";
+        document.getElementById("submitButton").textContent = "Atualizar";
+        document.getElementById("cancelButton").style.display = "inline";
+
+        editUsuarioId = usuario.id;
+      }
+    }
+
+    // Função para excluir um usuário
+    async function excluirUsuario(id) {
+      if (confirm("Deseja excluir o usuário?")) {
         try {
-          const response = await fetch(url, {
-            method,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(usuario),
+          const response = await fetch(API_URL + `user/${id}`, {
+            method: "DELETE",
           });
 
           if (response.ok) {
-            // Limpar o formulário
-            document.getElementById("usuarioForm").reset();
-            document.getElementById("formTitle").textContent = "Cadastro de Usuário";
-            document.getElementById("submitButton").textContent = "Salvar";
-            document.getElementById("cancelButton").style.display = "none";
-
-            // Atualizar a listagem de usuários
             await carregarUsuarios();
 
-            editUsuarioId = null;
-          }
-        } catch (error) {
-          console.error("Erro ao cadastrar/alterar usuário:", error);
-        }
-      }
+            if (editUsuarioId === id) {
+              document.getElementById("usuarioForm").reset();
+              document.getElementById("formTitle").textContent = "Cadastro de Usuário";
+              document.getElementById("submitButton").textContent = "Salvar";
+              document.getElementById("cancelButton").style.display = "none";
 
-      // Função para carregar os usuários da API
-      async function carregarUsuarios() {
-        try {
-          const response = await fetch(API_URL + "users");
-          const data = await response.json();
-
-          usuarios = data;
-          renderizarUsuarios();
-        } catch (error) {
-          console.error("Erro ao carregar usuários:", error);
-        }
-      }
-
-      // Função para renderizar a listagem de usuários na tabela
-      function renderizarUsuarios() {
-        const tableBody = document.getElementById("usuariosTableBody");
-        tableBody.innerHTML = "";
-
-        for (const usuario of usuarios) {
-          const row = document.createElement("tr");
-
-          const idCell = document.createElement("td");
-          idCell.textContent = usuario.id;
-          row.appendChild(idCell);
-
-          const nomeCell = document.createElement("td");
-          nomeCell.textContent = usuario.nome;
-          row.appendChild(nomeCell);
-
-          const emailCell = document.createElement("td");
-          emailCell.textContent = usuario.email;
-          row.appendChild(emailCell);
-
-          const telefoneCell = document.createElement("td");
-          telefoneCell.textContent = usuario.telefone;
-          row.appendChild(telefoneCell);
-
-          const acoesCell = document.createElement("td");
-
-          const editarButton = document.createElement("button");
-          editarButton.textContent = "Editar";
-          editarButton.classList.add("btn", "btn-primary", "mr-2");
-          editarButton.addEventListener("click", () => editarUsuario(usuario.id));
-          acoesCell.appendChild(editarButton);
-
-          const excluirButton = document.createElement("button");
-          excluirButton.textContent = "Excluir";
-          excluirButton.classList.add("btn", "btn-danger");
-          excluirButton.addEventListener("click", () => excluirUsuario(usuario.id));
-          acoesCell.appendChild(excluirButton);
-
-          row.appendChild(acoesCell);
-
-          tableBody.appendChild(row);
-        }
-      }
-
-      // Função para preencher o formulário com os dados do usuário a ser editado
-      function editarUsuario(id) {
-        const usuario = usuarios.find((user) => user.id === id);
-        if (usuario) {
-          document.getElementById("usuarioId").value = usuario.id;
-          document.getElementById("nome").value = usuario.nome;
-          document.getElementById("email").value = usuario.email;
-          document.getElementById("telefone").value = usuario.telefone;
-          document.getElementById("senha").value = usuario.senha;
-
-          document.getElementById("formTitle").textContent = "Edição de Usuário";
-          document.getElementById("submitButton").textContent = "Atualizar";
-          document.getElementById("cancelButton").style.display = "inline";
-
-          editUsuarioId = usuario.id;
-        }
-      }
-
-      // Função para excluir um usuário
-      async function excluirUsuario(id) {
-        if (confirm("Deseja excluir o usuário?")) {
-          try {
-            const response = await fetch(API_URL + `user/${id}`, {
-              method: "DELETE",
-            });
-
-            if (response.ok) {
-              await carregarUsuarios();
-
-              if (editUsuarioId === id) {
-                document.getElementById("usuarioForm").reset();
-                document.getElementById("formTitle").textContent = "Cadastro de Usuário";
-                document.getElementById("submitButton").textContent = "Salvar";
-                document.getElementById("cancelButton").style.display = "none";
-
-                editUsuarioId = null;
-              }
+              editUsuarioId = null;
             }
-          } catch (error) {
-            console.error("Erro ao excluir usuário:", error);
           }
+        } catch (error) {
+          console.error("Erro ao excluir usuário:", error);
         }
-        window.location.reload(true);
-
       }
+      window.location.reload(true);
 
-      // Função para cancelar a edição de um usuário
-      function cancelarEdicao() {
-        document.getElementById("usuarioForm").reset();
-        document.getElementById("formTitle").textContent = "Cadastro de Usuário";
-        document.getElementById("submitButton").textContent = "Salvar";
-        document.getElementById("cancelButton").style.display = "none";
+    }
 
-        editUsuarioId = null;
-      }
+    // Função para cancelar a edição de um usuário
+    function cancelarEdicao() {
+      document.getElementById("usuarioForm").reset();
+      document.getElementById("formTitle").textContent = "Cadastro de Usuário";
+      document.getElementById("submitButton").textContent = "Salvar";
+      document.getElementById("cancelButton").style.display = "none";
 
-      // Adicionar event listener para o formulário de cadastro/edição
-      document.getElementById("usuarioForm").addEventListener("submit", cadastrarUsuario);
+      editUsuarioId = null;
+    }
 
-      // Adicionar event listener para o botão de cancelar
-      document.getElementById("cancelButton").addEventListener("click", cancelarEdicao);
+    // Adicionar event listener para o formulário de cadastro/edição
+    document.getElementById("usuarioForm").addEventListener("submit", cadastrarUsuario);
 
-      // Carregar os usuários ao carregar a página
-      carregarUsuarios();
-    </script>
-  </body>
+    // Adicionar event listener para o botão de cancelar
+    document.getElementById("cancelButton").addEventListener("click", cancelarEdicao);
+
+    // Carregar os usuários ao carregar a página
+    carregarUsuarios();
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+</body>
 </html>

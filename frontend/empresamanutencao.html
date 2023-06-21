@@ -1,109 +1,145 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Cadastro e Listagem de Empresas de Manutenção</title>
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <h3>Cadastro de Empresa de Manutenção</h3>
-          <form id="empresaForm">
-            <input type="hidden" id="empresaId" value="" />
-            <div class="form-group">
-              <label for="nome_empresa">Nome da Empresa:</label>
-              <input
-                type="text"
-                class="form-control"
-                id="nome_empresa"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="tecnico_responsavel">Técnico Responsável:</label>
-              <input
-                type="text"
-                class="form-control"
-                id="tecnico_responsavel"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="telefone">Telefone:</label>
-              <input type="text" class="form-control" id="telefone" required />
-            </div>
-            <div class="form-group">
-              <label for="email">Email:</label>
-              <input type="email" class="form-control" id="email" required />
-            </div>
-            <div class="form-group">
-              <label for="cnpj">CNPJ:</label>
-              <input type="text" class="form-control" id="cnpj" required />
-            </div>
-            <div class="form-group">
-              <label for="rua">Rua:</label>
-              <input type="text" class="form-control" id="rua" required />
-            </div>
-            <div class="form-group">
-              <label for="numero">Número:</label>
-              <input type="text" class="form-control" id="numero" required />
-            </div>
-            <div class="form-group">
-              <label for="complemento">Complemento:</label>
-              <input type="text" class="form-control" id="complemento" />
-            </div>
-            <div class="form-group">
-              <label for="bairro">Bairro:</label>
-              <input type="text" class="form-control" id="bairro" required />
-            </div>
-            <div class="form-group">
-              <label for="cidade">Cidade:</label>
-              <input type="text" class="form-control" id="cidade" required />
-            </div>
-            <div class="form-group">
-              <label for="estado">Estado:</label>
-              <input type="text" class="form-control" id="estado" required />
-            </div>
-            <div class="form-group">
-              <label for="pais">País:</label>
-              <input type="text" class="form-control" id="pais" required />
-            </div>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-          </form>
-        </div>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="custom.css">
+  <title>Empresas de Manutenções</title>
+</head>
+<body style="background-color: #E4E4E4">
+  <!--sidedrawer menu-->
+  <div id="side-drawer" class="position-fixed">
+    <div class="h-100 bg-white">
+      <div class="row align-items-center p-4">
+        <div class="col-10"><h1 class="title">Menu</h1></div>
+        <div class="col-2"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="closeSideDrawer()"></button></div>
       </div>
-
-      <style>
-        body, html {
-          height: 100%;
-        }
-    
-        .container {
-          min-height: 100%;
-          display: flex;
-          flex-direction: column;
-        }
-    
-        .table-wrapper {
-          flex-grow: 1;
-          overflow-y: auto;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <h3>Listagem de Empresas de Manutenção</h3>
-            <div class="table-wrapper">
-              <table class="table mt-4">
-                <thead>
-                  <tr>
+      <ul class="list-group" onclick="closeSideDrawer()">
+        <a href="dashboard.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/home.png" alt="início"><div class="media-body"><h5 class="mt-0 mb-1">Início</h5></div></li></a>
+        <a href="/patrimonio.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/patrimonio.png" alt="patrimônio"><div class="media-body"><h5 class="mt-0 mb-1">Patrimônio</h5></div></li></a>
+        <a href="/usuarios.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/user.png" alt="usuarios"><div class="media-body"><h5 class="mt-0 mb-1">Usuários</h5></div></li></a>
+        <a href="/local.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/sala-2.png" alt="local"><div class="media-body"><h5 class="mt-0 mb-1">Locais</h5></div></li></a>
+        <a href="/categorias.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="categorias"><div class="media-body"><h5 class="mt-0 mb-1">Categorias</h5></div></li></a>
+        <a href="/avarias.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="avarias"><div class="media-body"><h5 class="mt-0 mb-1">Avarias</h5></div></li></a>
+        <a href="/manutencao.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="manutenção"><div class="media-body"><h5 class="mt-0 mb-1">Manutenção</h5></div></li></a>
+        <a href="/empresamanutencao.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="empresas de manutenção"><div class="media-body"><h5 class="mt-0 mb-1">Empresas de manutenção</h5></div></li></a>
+        <a href="/configuracoes.html" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/config.png" alt="configurações"><div class="media-body"><h5 class="mt-0 mb-1">Configurações</h5></div></li></a>
+        <a href="#" class="list-group-item list-group-item-action border-0 rounded-0 text-reset text-decoration-none"><li class="media"><img class="mr-3" src="images/logout.png" alt="início"><div class="media-body"><h5 class="mt-0 mb-1">Sair</h5></div></li></a>
+      </ul>
+    </div>
+  </div>
+  <div class="position-absolute w-100" style="bottom: 0">
+  </div>
+  <div id="side-drawer-void" class="position-fixed d-none" onclick="closeSideDrawer()"></div>
+  <!--header-->
+  <header style="height: 75px; background-color: #3D90D5;">
+    <span class="navbar-text p-0">
+      <div class="row-flex">
+        <div class="col-12 p-0"><img src="images/logo.jpg" style="max-width:25%;" alt="Logo"></div>
+      </div>
+    </span>
+  </header>
+  <!--sidebar toggler-->
+  <nav class="navbar navbar-dark" style="height: 65px; background-color: #3D90D5; max-width: 50%; border-end-end-radius: 3rem;">
+    <button class="navbar-toggler" type="button" onclick="openSideDrawer()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <!--quadro branco-->
+  <main class="container col-md-10 mb-4 bg-white">
+    <div class="p-4 p-md-5">
+        <div class="row"><p class="fs-1 col-12">Empresas de Serviços</p></div>
+        <p>Aqui você poderá editar e cadastrar empresas de manutenções e outros serviços.</p>
+        <div class="mb-4"><!-- botão abrir modal -->
+          <button type="button" class="btn" style="background-color: #3D90D5; color:white;" data-bs-toggle="modal" data-bs-target="#cadastroModal"><b>Cadastrar empresa</b></button>
+        </div>
+        <div>
+          <!-- Modal -->
+          <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Cadastrar empresa</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="resetForm()"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form class="border p-3 m-3" id="empresaForm">
+                            <input type="hidden" id="empresaId" value="" />
+                            <div class="row mb-3 justify-content-center align-items-center">
+                              <div class="col-6">
+                                  <label for="nome_empresa" class="form-label">Nome da Empresa:</label>
+                                  <input class="form-control" type="text" id="nome_empresa" required/>
+                              </div>
+                              <div class="col-6">
+                                <label for="tecnico_responsavel">Técnico Responsável:</label>
+                                <input type="text" class="form-control" id="tecnico_responsavel" required/>
+                              </div>
+                            </div>
+                            <div class="row mb-3 justify-content-center align-items-center">
+                              <div class="col-6">
+                                <label for="telefone">Telefone:</label>
+                                <input type="text" class="form-control" id="telefone" required />
+                              </div>
+                              <div class="col-6">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" required />
+                              </div>
+                            </div>
+                            <div class="mb-3 mt-4">
+                              <label for="cnpj">CNPJ:</label>
+                              <input type="text" class="form-control" id="cnpj" required />
+                            </div>
+                            <div class="row mb-3 justify-content-center align-items-center">
+                              <div class="col-6">
+                                <label for="rua">Rua:</label>
+                                <input type="text" class="form-control" id="rua" required />
+                              </div>
+                              <div class="col-6">
+                                <label for="numero">Número:</label>
+                                <input type="text" class="form-control" id="numero" required />
+                              </div>
+                            </div>
+                            <div class="row mb-3 justify-content-center align-items-center">
+                              <div class="col-6">
+                                <label for="complemento">Complemento:</label>
+                                <input type="text" class="form-control" id="complemento" />
+                              </div>
+                              <div class="col-6">
+                                <label for="bairro">Bairro:</label>
+                                <input type="text" class="form-control" id="bairro" required />
+                              </div>
+                            </div>
+                            <div class="row mb-3 justify-content-center align-items-center">
+                              <div class="col-6">
+                                <label for="cidade">Cidade:</label>
+                                <input type="text" class="form-control" id="cidade" required />
+                              </div>
+                              <div class="col-6">
+                                <label for="estado">Estado:</label>
+                                <input type="text" class="form-control" id="estado" required />
+                              </div>
+                            </div>
+                              <div class="mb-3 mt-4">
+                                <label for="pais">País:</label>
+                                <input type="text" class="form-control w-50" id="pais" required />
+                              </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn" style="background-color: #3D90D5; color:white;" onClick="cadastrarEmpresa(event)">Salvar</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick="resetForm()">Fechar</button>
+                        </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div>
+          <table class="table table-hover">
+              <thead>
+                <tr>
                     <th>ID</th>
                     <th>Nome</th>
                     <th>Técnico Responsável</th>
@@ -118,186 +154,211 @@
                     <th>Estado</th>
                     <th>País</th>
                     <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody id="empresasTableBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+                </tr>
+              </thead>
+              <tbody id="empresasTableBody" class="table-group-divider"></tbody>
+            </table>
       </div>
+    </div>
+  </main>
+  <!--script sidedrawer-->
+  <script>
+    function openSideDrawer() {
+    document.getElementById("side-drawer").style.left = "0";
+    document.getElementById("side-drawer-void").classList.add("d-block");
+    document.getElementById("side-drawer-void").classList.remove("d-none");
+    }
 
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    function closeSideDrawer() {
+    document.getElementById("side-drawer").style.left = "-336px";
+    document.getElementById("side-drawer-void").classList.add("d-none");
+    document.getElementById("side-drawer-void").classList.remove("d-block");
+    }
 
-    <script>
-      const API_URL = `${window.location.origin}/`;
-      let editEmpresaId = null;
-      let empresas = [];
+    window.openSideDrawer = openSideDrawer;
+    window.closeSideDrawer = closeSideDrawer;
+  </script>
+  
+  <script>
+    const API_URL = `${window.location.origin}/`;
+    let editEmpresaId = null;
+    let empresas = [];
 
-      // Função para cadastrar/alterar empresa
-      async function cadastrarEmpresa(event) {
-        event.preventDefault();
+    // Função para cadastrar/alterar empresa
+    async function cadastrarEmpresa(event) {
+      event.preventDefault();
 
-        const empresaId = document.getElementById("empresaId").value ;
-        const nome_empresa = document.getElementById("nome_empresa").value;
-        const tecnico_responsavel = document.getElementById(
-          "tecnico_responsavel"
-        ).value;
-        const telefone = document.getElementById("telefone").value;
-        const email = document.getElementById("email").value;
-        const cnpj = document.getElementById("cnpj").value;
-        const rua = document.getElementById("rua").value;
-        const numero = document.getElementById("numero").value;
-        const complemento = document.getElementById("complemento").value;
-        const bairro = document.getElementById("bairro").value;
-        const cidade = document.getElementById("cidade").value;
-        const estado = document.getElementById("estado").value;
-        const pais = document.getElementById("pais").value;
+      const empresaId = document.getElementById("empresaId").value ;
+      const nome_empresa = document.getElementById("nome_empresa").value;
+      const tecnico_responsavel = document.getElementById(
+        "tecnico_responsavel"
+      ).value;
+      const telefone = document.getElementById("telefone").value;
+      const email = document.getElementById("email").value;
+      const cnpj = document.getElementById("cnpj").value;
+      const rua = document.getElementById("rua").value;
+      const numero = document.getElementById("numero").value;
+      const complemento = document.getElementById("complemento").value;
+      const bairro = document.getElementById("bairro").value;
+      const cidade = document.getElementById("cidade").value;
+      const estado = document.getElementById("estado").value;
+      const pais = document.getElementById("pais").value;
 
-        const empresa = {
-          id_empresa_manutencao: empresaId,
-          nome_empresa,
-          tecnico_responsavel,
-          telefone,
-          email,
-          cnpj,
-          rua,
-          numero,
-          complemento,
-          bairro,
-          cidade,
-          estado,
-          pais,
-        };
+      const empresa = {
+        id_empresa_manutencao: empresaId,
+        nome_empresa,
+        tecnico_responsavel,
+        telefone,
+        email,
+        cnpj,
+        rua,
+        numero,
+        complemento,
+        bairro,
+        cidade,
+        estado,
+        pais,
+      };
 
-        let url = API_URL + "maintenance-companies";
-        let method = "POST";
-        if (empresaId !== "") {
-          url += `/${empresaId}`;
-          method = "PUT";
-        }
-
-        const response = await fetch(url, {
-          method,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(empresa),
-        });
-
-        if (response.ok) {
-          alert("Empresa salva com sucesso!");
-          document.getElementById("empresaId").value = "";
-          document.getElementById("nome_empresa").value = "";
-          document.getElementById("tecnico_responsavel").value = "";
-          document.getElementById("telefone").value = "";
-          document.getElementById("email").value = "";
-          document.getElementById("cnpj").value = "";
-          document.getElementById("rua").value = "";
-          document.getElementById("numero").value = "";
-          document.getElementById("complemento").value = "";
-          document.getElementById("bairro").value = "";
-          document.getElementById("cidade").value = "";
-          document.getElementById("estado").value = "";
-          document.getElementById("pais").value = "";
-
-          listarEmpresas();
-        } else {
-          alert(
-            "Erro ao salvar a empresa. Por favor, tente novamente."
-          );
-        }
+      let url = API_URL + "maintenance-companies";
+      let method = "POST";
+      if (empresaId !== "") {
+        url += `/${empresaId}`;
+        method = "PUT";
       }
 
-      // Função para listar as empresas
-      async function listarEmpresas() {
-        const response = await fetch(API_URL + "maintenance-companies");
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(empresa),
+      });
 
-        if (response.ok) {
-          empresas = await response.json();
-          const tableBody = document.getElementById("empresasTableBody");
-          tableBody.innerHTML = "";
+      if (response.ok) {
+        alert("Empresa salva com sucesso!");
+        document.getElementById("empresaId").value = "";
+        document.getElementById("nome_empresa").value = "";
+        document.getElementById("tecnico_responsavel").value = "";
+        document.getElementById("telefone").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("cnpj").value = "";
+        document.getElementById("rua").value = "";
+        document.getElementById("numero").value = "";
+        document.getElementById("complemento").value = "";
+        document.getElementById("bairro").value = "";
+        document.getElementById("cidade").value = "";
+        document.getElementById("estado").value = "";
+        document.getElementById("pais").value = "";
 
-          empresas.forEach((empresa) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-              <td>${empresa.id_empresa_manutencao}</td>
-              <td>${empresa.nome_empresa}</td>
-              <td>${empresa.tecnico_responsavel}</td>
-              <td>${empresa.telefone}</td>
-              <td>${empresa.email}</td>
-              <td>${empresa.cnpj}</td>
-              <td>${empresa.rua}</td>
-              <td>${empresa.numero}</td>
-              <td>${empresa.complemento}</td>
-              <td>${empresa.bairro}</td>
-              <td>${empresa.cidade}</td>
-              <td>${empresa.estado}</td>
-              <td>${empresa.pais}</td>
-              <td>
-                <button class="btn btn-primary btn-sm" onclick="editarEmpresa(${empresa.id_empresa_manutencao})">Editar</button>
-                <button class="btn btn-danger btn-sm" onclick="excluirEmpresa(${empresa.id_empresa_manutencao})">Excluir</button>
-              </td>
-            `;
-            tableBody.appendChild(row);
-          });
-        } else {
-          alert(
-            "Erro ao listar as empresas. Por favor, tente novamente."
-          );
-        }
-      }
-
-      // Função para editar uma empresa
-      function editarEmpresa(empresaId) {
-  const empresa = empresas.find((e) => e.id_empresa_manutencao === empresaId);
-  if (empresa) {
-    document.getElementById("empresaId").value = empresaId;
-    document.getElementById("nome_empresa").value = empresa.nome_empresa;
-    document.getElementById("tecnico_responsavel").value = empresa.tecnico_responsavel;
-    document.getElementById("telefone").value = empresa.telefone;
-    document.getElementById("email").value = empresa.email;
-    document.getElementById("cnpj").value = empresa.cnpj;
-    document.getElementById("rua").value = empresa.rua;
-    document.getElementById("numero").value = empresa.numero;
-    document.getElementById("complemento").value = empresa.complemento;
-    document.getElementById("bairro").value = empresa.bairro;
-    document.getElementById("cidade").value = empresa.cidade;
-    document.getElementById("estado").value = empresa.estado;
-    document.getElementById("pais").value = empresa.pais;
-
-    $("#empresaModal").modal("show");
-  }
-}
-
-      // Função para excluir uma empresa
-      async function excluirEmpresa(empresaId) {
-        const response = await fetch(
-          API_URL + `maintenance-companies/${empresaId}`,
-          {
-            method: "DELETE",
-          }
+        listarEmpresas();
+      } else {
+        alert(
+          "Erro ao salvar a empresa. Por favor, tente novamente."
         );
-
-        if (response.ok) {
-          alert("Empresa excluída com sucesso!");
-          listarEmpresas();
-        } else {
-          alert(
-            "Erro ao excluir a empresa. Por favor, tente novamente."
-          );
-        }
       }
+      $("#cadastroModal").modal("hide");
+    }
 
-      // Event listener para o formulário de empresa
-      document
-        .getElementById("empresaForm")
-        .addEventListener("submit", cadastrarEmpresa);
+    // Função para listar as empresas
+    async function listarEmpresas() {
+      const response = await fetch(API_URL + "maintenance-companies");
 
-      // Chamar a função listarEmpresas quando a página é carregada
-      listarEmpresas();
-    </script>
-  </body>
+      if (response.ok) {
+        empresas = await response.json();
+        const tableBody = document.getElementById("empresasTableBody");
+        tableBody.innerHTML = "";
+
+        empresas.forEach((empresa) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${empresa.id_empresa_manutencao}</td>
+            <td>${empresa.nome_empresa}</td>
+            <td>${empresa.tecnico_responsavel}</td>
+            <td>${empresa.telefone}</td>
+            <td>${empresa.email}</td>
+            <td>${empresa.cnpj}</td>
+            <td>${empresa.rua}</td>
+            <td>${empresa.numero}</td>
+            <td>${empresa.complemento}</td>
+            <td>${empresa.bairro}</td>
+            <td>${empresa.cidade}</td>
+            <td>${empresa.estado}</td>
+            <td>${empresa.pais}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="editarEmpresa(${empresa.id_empresa_manutencao})">Editar</button>
+              <button class="btn btn-danger btn-sm" onclick="excluirEmpresa(${empresa.id_empresa_manutencao})">Excluir</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } else {
+        alert(
+          "Erro ao listar as empresas. Por favor, tente novamente."
+        );
+      }
+    }
+
+    // Função para editar uma empresa
+    function editarEmpresa(empresaId) {
+      $('#cadastroModal').modal('toggle')
+      const empresa = empresas.find((e) => e.id_empresa_manutencao === empresaId);
+      if (empresa) {
+        document.getElementById("empresaId").value = empresaId;
+        document.getElementById("nome_empresa").value = empresa.nome_empresa;
+        document.getElementById("tecnico_responsavel").value = empresa.tecnico_responsavel;
+        document.getElementById("telefone").value = empresa.telefone;
+        document.getElementById("email").value = empresa.email;
+        document.getElementById("cnpj").value = empresa.cnpj;
+        document.getElementById("rua").value = empresa.rua;
+        document.getElementById("numero").value = empresa.numero;
+        document.getElementById("complemento").value = empresa.complemento;
+        document.getElementById("bairro").value = empresa.bairro;
+        document.getElementById("cidade").value = empresa.cidade;
+        document.getElementById("estado").value = empresa.estado;
+        document.getElementById("pais").value = empresa.pais;
+      }
+    }
+
+    // Função para excluir uma empresa
+    async function excluirEmpresa(empresaId) {
+      const response = await fetch(
+        API_URL + `maintenance-companies/${empresaId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        alert("Empresa excluída com sucesso!");
+        listarEmpresas();
+      } else {
+        alert(
+          "Erro ao excluir a empresa. Por favor, tente novamente."
+        );
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("empresaForm").reset();
+      document.getElementById("empresaId").value = "";
+      editEmpresaId = null;
+    }
+
+    // Event listener para o formulário de empresa
+    document
+      .getElementById("empresaForm")
+      .addEventListener("submit", cadastrarEmpresa);
+
+    // Chamar a função listarEmpresas quando a página é carregada
+    listarEmpresas();
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+</body>
 </html>
