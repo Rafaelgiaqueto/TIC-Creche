@@ -2,7 +2,6 @@ import { patrimonyRepository } from "../repositories/patrimonyRepository";
 import { BadRequestError, NotFoundError } from "../helpers/api-erros";
 import { categoryRepository } from "../repositories/categoryRepository";
 import { localPatrimonyRepository } from "../repositories/localPatrimonyRepository";
-import { DataSource } from "typeorm";
 
 export class PatrimonyService {
   async createPatrimony(userId: string, patrimonyData: any) {

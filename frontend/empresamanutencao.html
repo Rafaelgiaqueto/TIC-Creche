@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cadastro e Listagem de Empresas de Manutenção</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <h3>Cadastro de Empresa de Manutenção</h3>
+          <form id="empresaForm">
+            <input type="hidden" id="empresaId" value="" />
+            <div class="form-group">
+              <label for="nome_empresa">Nome da Empresa:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nome_empresa"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="tecnico_responsavel">Técnico Responsável:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="tecnico_responsavel"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone:</label>
+              <input type="text" class="form-control" id="telefone" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" class="form-control" id="email" required />
+            </div>
+            <div class="form-group">
+              <label for="cnpj">CNPJ:</label>
+              <input type="text" class="form-control" id="cnpj" required />
+            </div>
+            <div class="form-group">
+              <label for="rua">Rua:</label>
+              <input type="text" class="form-control" id="rua" required />
+            </div>
+            <div class="form-group">
+              <label for="numero">Número:</label>
+              <input type="text" class="form-control" id="numero" required />
+            </div>
+            <div class="form-group">
+              <label for="complemento">Complemento:</label>
+              <input type="text" class="form-control" id="complemento" />
+            </div>
+            <div class="form-group">
+              <label for="bairro">Bairro:</label>
+              <input type="text" class="form-control" id="bairro" required />
+            </div>
+            <div class="form-group">
+              <label for="cidade">Cidade:</label>
+              <input type="text" class="form-control" id="cidade" required />
+            </div>
+            <div class="form-group">
+              <label for="estado">Estado:</label>
+              <input type="text" class="form-control" id="estado" required />
+            </div>
+            <div class="form-group">
+              <label for="pais">País:</label>
+              <input type="text" class="form-control" id="pais" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-md-8">
+          <h3>Listagem de Empresas de Manutenção</h3>
+          <table class="table mt-4">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Técnico Responsável</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>CNPJ</th>
+                <th>Rua</th>
+                <th>Número</th>
+                <th>Complemento</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>País</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="empresasTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <script>
+      const API_URL = `${window.location.origin}/`;
+      let editEmpresaId = null;
+      let empresas = [];
+
+      // Função para cadastrar/alterar empresa
+      async function cadastrarEmpresa(event) {
+        event.preventDefault();
+
+        const empresaId = document.getElementById("empresaId").value || null;
+        const nome_empresa = document.getElementById("nome_empresa").value;
+        const tecnico_responsavel = document.getElementById(
+          "tecnico_responsavel"
+        ).value;
+        const telefone = document.getElementById("telefone").value;
+        const email = document.getElementById("email").value;
+        const cnpj = document.getElementById("cnpj").value;
+        const rua = document.getElementById("rua").value;
+        const numero = document.getElementById("numero").value;
+        const complemento = document.getElementById("complemento").value;
+        const bairro = document.getElementById("bairro").value;
+        const cidade = document.getElementById("cidade").value;
+        const estado = document.getElementById("estado").value;
+        const pais = document.getElementById("pais").value;
+
+        const empresa = {
+          id_empresa_manutencao: empresaId,
+          nome_empresa,
+          tecnico_responsavel,
+          telefone,
+          email,
+          cnpj,
+          rua,
+          numero,
+          complemento,
+          bairro,
+          cidade,
+          estado,
+          pais,
+        };
+
+        let url = API_URL + "maintenance-companies";
+        let method = "POST";
+        if (empresaId !== "") {
+          url += `/${empresaId}`;
+          method = "PUT";
+        }
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(empresa),
+        });
+
+        if (response.ok) {
+          alert("Empresa salva com sucesso!");
+          document.getElementById("empresaId").value = "";
+          document.getElementById("nome_empresa").value = "";
+          document.getElementById("tecnico_responsavel").value = "";
+          document.getElementById("telefone").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("cnpj").value = "";
+          document.getElementById("rua").value = "";
+          document.getElementById("numero").value = "";
+          document.getElementById("complemento").value = "";
+          document.getElementById("bairro").value = "";
+          document.getElementById("cidade").value = "";
+          document.getElementById("estado").value = "";
+          document.getElementById("pais").value = "";
+
+          listarEmpresas();
+        } else {
+          alert(
+            "Erro ao salvar a empresa. Por favor, tente novamente."
+          );
+        }
+      }
+
+      // Função para listar as empresas
+      async function listarEmpresas() {
+        const response = await fetch(API_URL + "maintenance-companies");
+
+        if (response.ok) {
+          empresas = await response.json();
+          const tableBody = document.getElementById("empresasTableBody");
+          tableBody.innerHTML = "";
+
+          empresas.forEach((empresa) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${empresa.id_empresa_manutencao}</td>
+              <td>${empresa.nome_empresa}</td>
+              <td>${empresa.tecnico_responsavel}</td>
+              <td>${empresa.telefone}</td>
+              <td>${empresa.email}</td>
+              <td>${empresa.cnpj}</td>
+              <td>${empresa.rua}</td>
+              <td>${empresa.numero}</td>
+              <td>${empresa.complemento}</td>
+              <td>${empresa.bairro}</td>
+              <td>${empresa.cidade}</td>
+              <td>${empresa.estado}</td>
+              <td>${empresa.pais}</td>
+              <td>
+                <button class="btn btn-primary btn-sm" onclick="editarEmpresa(${empresa.id_empresa_manutencao})">Editar</button>
+                <button class="btn btn-danger btn-sm" onclick="excluirEmpresa(${empresa.id_empresa_manutencao})">Excluir</button>
+              </td>
+            `;
+            tableBody.appendChild(row);
+          });
+        } else {
+          alert(
+            "Erro ao listar as empresas. Por favor, tente novamente."
+          );
+        }
+      }
+
+      // Função para editar uma empresa
+      function editarEmpresa(empresaId) {
+        const empresa = empresas.find(
+          (e) => e.id_empresa_manutencao === empresaId
+        );
+        if (empresa) {
+          document.getElementById("empresaId").value =
+            empresa.id_empresa_manutencao;
+          document.getElementById("nome_empresa").value =
+            empresa.nome_empresa;
+          document.getElementById("tecnico_responsavel").value =
+            empresa.tecnico_responsavel;
+          document.getElementById("telefone").value = empresa.telefone;
+          document.getElementById("email").value = empresa.email;
+          document.getElementById("cnpj").value = empresa.cnpj;
+          document.getElementById("rua").value = empresa.rua;
+          document.getElementById("numero").value = empresa.numero;
+          document.getElementById("complemento").value =
+            empresa.complemento;
+          document.getElementById("bairro").value = empresa.bairro;
+          document.getElementById("cidade").value = empresa.cidade;
+          document.getElementById("estado").value = empresa.estado;
+          document.getElementById("pais").value = empresa.pais;
+
+          $("#empresaModal").modal("show");
+        }
+      }
+
+      // Função para excluir uma empresa
+      async function excluirEmpresa(empresaId) {
+        const response = await fetch(
+          API_URL + `maintenance-companies/${empresaId}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (response.ok) {
+          alert("Empresa excluída com sucesso!");
+          listarEmpresas();
+        } else {
+          alert(
+            "Erro ao excluir a empresa. Por favor, tente novamente."
+          );
+        }
+      }
+
+      // Event listener para o formulário de empresa
+      document
+        .getElementById("empresaForm")
+        .addEventListener("submit", cadastrarEmpresa);
+
+      // Chamar a função listarEmpresas quando a página é carregada
+      listarEmpresas();
+    </script>
+  </body>
+</html>

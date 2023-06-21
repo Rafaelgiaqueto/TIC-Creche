@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cadastro e Listagem de Avarias</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <h3>Cadastro de Avaria</h3>
+          <form id="avariaForm">
+            <input type="hidden" id="avariaId" value="" />
+            <div class="form-group">
+              <label for="descricao">Descrição:</label>
+              <input type="text" class="form-control" id="descricao" required />
+            </div>
+            <div class="form-group">
+              <label for="data">Data da Avaria:</label>
+              <input type="date" class="form-control" id="data" required />
+            </div>
+            <div class="form-group">
+              <label for="patrimonio">Nome do Patrimônio:</label>
+              <select class="form-control" id="patrimonio" required>
+                <!-- Options serão preenchidas dinamicamente -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="servico">Descrição do Serviço:</label>
+              <select class="form-control" id="servico" required>
+                <!-- Options serão preenchidas dinamicamente -->
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" id="salvarBtn">
+              Cadastrar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="atualizarBtn"
+              style="display: none"
+              onclick="salvarAvaria(event)"
+            >
+              Atualizar
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <h3>Listagem de Avarias</h3>
+          <table class="table mt-4">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Descrição</th>
+                <th>Data da Avaria</th>
+                <th>Nome do Patrimônio</th>
+                <th>Descrição do Serviço</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="avariasTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <script>
+      const API_URL = `${window.location.origin}/`;
+
+      let editAvariaId = null;
+      let avarias = [];
+
+      // Função para preencher o select de nome do patrimônio
+      async function preencherSelectPatrimonio() {
+        const response = await fetch(API_URL + "patrimony");
+        const patrimonios = await response.json();
+        const selectPatrimonio = document.getElementById("patrimonio");
+
+        selectPatrimonio.innerHTML = "";
+
+        patrimonios.forEach((patrimonio) => {
+          const option = document.createElement("option");
+          option.value = patrimonio.id_patrimonio;
+          option.text = patrimonio.nome_patrimonio;
+          selectPatrimonio.appendChild(option);
+        });
+      }
+
+      // Função para preencher o select de descrição do serviço
+      async function preencherSelectServico() {
+        const response = await fetch(API_URL + "maintenances");
+        const servicos = await response.json();
+        const selectServico = document.getElementById("servico");
+
+        selectServico.innerHTML = "";
+
+        servicos.forEach((servico) => {
+          const option = document.createElement("option");
+          option.value = servico.id_manutencao;
+          option.text = servico.descricao_servico;
+          selectServico.appendChild(option);
+        });
+      }
+
+      // Função para cadastrar/editar avaria
+      async function salvarAvaria(event) {
+        event.preventDefault();
+
+        const descricao = document.getElementById("descricao").value;
+        const dataAvaria = document.getElementById("data").value;
+        const idPatrimonio = document.getElementById("patrimonio").value;
+        const idServico = document.getElementById("servico").value;
+
+        const avaria = {
+          descricao,
+          data_avaria: dataAvaria,
+          id_manutencao: idServico,
+          id_patrimonio: idPatrimonio,
+        };
+
+        const url = editAvariaId
+          ? `${API_URL}breakdowns/${editAvariaId}`
+          : `${API_URL}breakdowns`;
+
+        const method = editAvariaId ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(avaria),
+        });
+
+        if (response.ok) {
+          const message = editAvariaId
+            ? "Avaria atualizada com sucesso!"
+            : "Avaria cadastrada com sucesso!";
+
+          alert(message);
+          resetForm();
+          listarAvarias();
+        } else {
+          const errorMessage = editAvariaId
+            ? "Erro ao atualizar a avaria. Por favor, tente novamente."
+            : "Erro ao cadastrar a avaria. Por favor, tente novamente.";
+
+          alert(errorMessage);
+        }
+      }
+
+      function formatarData(data) {
+  const partesData = data.split("T")[0].split("-");
+  const ano = partesData[0];
+  const mes = partesData[1];
+  const dia = partesData[2];
+  return `${dia}/${mes}/${ano}`;
+}
+      // Função para listar as avarias
+      async function listarAvarias() {
+        const response = await fetch(API_URL + "breakdowns");
+        avarias = await response.json();
+        const tableBody = document.querySelector("#avariasTableBody");
+
+        tableBody.innerHTML = "";
+        avarias.forEach((avaria) => {
+          const row = document.createElement("tr");
+          const formattedDate = formatarData(avaria.data_avaria); // Chamada para formatar a data
+          row.innerHTML = `
+      <td>${avaria.id_avaria}</td>
+      <td>${avaria.descricao}</td>
+      <td>${formattedDate}</td> 
+      <td>${avaria.patrimony.nome_patrimonio}</td>
+      <td>${avaria.maintenance.descricao_servico}</td>
+      <td>
+        <button class="btn btn-sm btn-primary" onclick="editarAvaria('${avaria.id_avaria}')">Editar</button>
+        <button class="btn btn-sm btn-danger" onclick="excluirAvaria('${avaria.id_avaria}')">Excluir</button>
+      </td>
+    `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Função para editar avaria
+      async function editarAvaria(id) {
+        const response = await fetch(`${API_URL}breakdowns/${id}`);
+
+        if (response.ok) {
+          const avaria = await response.json();
+
+          document.getElementById("avariaId").value = avaria.id_avaria;
+          document.getElementById("descricao").value = avaria.descricao;
+          document.getElementById("data").value = avaria.data_avaria;
+          document.getElementById("patrimonio").value =
+            avaria.patrimony.id_patrimonio;
+          document.getElementById("servico").value =
+            avaria.maintenance.id_manutencao;
+          editAvariaId = avaria.id_avaria;
+          const submitButton = document.getElementById("salvarBtn");
+          submitButton.innerText = "Atualizar";
+          submitButton.removeEventListener("click", salvarAvaria);
+          submitButton.addEventListener("click", salvarAvaria);
+
+          // Ocultar botão "Salvar" e mostrar botão "Atualizar"
+          document.getElementById("salvarBtn").style.display = "none";
+          document.getElementById("atualizarBtn").style.display =
+            "inline-block";
+        }
+      }
+
+      // Função para excluir avaria
+      async function excluirAvaria(id) {
+        const confirmacao = confirm(
+          "Tem certeza que deseja excluir esta avaria?"
+        );
+
+        if (confirmacao) {
+          const response = await fetch(API_URL + `breakdowns/${id}`, {
+            method: "DELETE",
+          });
+
+          if (response.ok) {
+            alert("Avaria excluída com sucesso!");
+            listarAvarias();
+          } else {
+            alert("Erro ao excluir a avaria. Por favor, tente novamente.");
+          }
+        }
+      }
+
+      // Função para resetar o formulário
+      function resetForm() {
+        document.getElementById("avariaForm").reset();
+        document.getElementById("avariaId").value = "";
+        editAvariaId = null;
+      }
+
+      // Evento de submit do formulário
+      document
+        .getElementById("avariaForm")
+        .addEventListener("submit", salvarAvaria);
+
+      // Carregar dados iniciais
+      preencherSelectPatrimonio();
+      preencherSelectServico();
+      listarAvarias();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cadastro e Listagem de Manutenções</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <h3>Cadastro de Manutenção</h3>
+          <form id="manutencaoForm">
+            <input type="hidden" id="id_manutencao" value="" />
+            <div class="form-group">
+              <label for="descricao_servico">Descrição do Serviço:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="descricao_servico"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="data_manutencao">Data da Manutenção:</label>
+              <input
+                type="date"
+                class="form-control"
+                id="data_manutencao"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="empresa_manutencao">Empresa de Manutenção:</label>
+              <select class="form-control" id="empresa_manutencao" required>
+                <!-- Options serão preenchidos dinamicamente -->
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+              Cadastrar
+            </button>
+            <button type="button" class="btn btn-secondary" id="cancelBtn">
+              Cancelar
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-md-8">
+          <h3>Listagem de Manutenções</h3>
+          <table class="table mt-4">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Descrição do Serviço</th>
+                <th>Data da Manutenção</th>
+                <th>Empresa de Manutenção</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="manutencoesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <script>
+      const API_URL = `${window.location.origin}/`;
+      let editManutencaoId = null;
+      let manutencoes = [];
+
+      async function cadastrarManutencao(event) {
+        event.preventDefault();
+
+        const manutencaoId = document.getElementById("id_manutencao").value;
+        const descricao_servico = document.getElementById("descricao_servico").value;
+        const data_manutencao = document.getElementById("data_manutencao").value;
+        const empresa_manutencao = document.getElementById("empresa_manutencao").value;
+
+        const token = localStorage.getItem("token");
+
+        const manutencao = {
+          maintenanceData: {
+            descricao_servico: descricao_servico,
+            data_manutencao: data_manutencao,
+            id_empresa_manutencao: empresa_manutencao,
+          },
+        };
+
+        try {
+          let response;
+
+          if (editManutencaoId) {
+            response = await fetch(
+              API_URL + "maintenances/" + editManutencaoId,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(manutencao),
+              }
+            );
+          } else {
+            response = await fetch(API_URL + "maintenances", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(manutencao),
+            });
+          }
+
+          if (response.ok) {
+            document.getElementById("manutencaoForm").reset();
+            editManutencaoId = null;
+            await listarManutencoes();
+            alert("Manutenção cadastrada/atualizada com sucesso!");
+            document.getElementById("submitBtn").innerText = "Cadastrar";
+          } else {
+            throw new Error("Erro ao cadastrar/alterar a manutenção.");
+          }
+        } catch (error) {
+          alert(`${error.message} Por favor, tente novamente.`);
+        }
+      }
+
+      function editarManutencao(manutencaoId) {
+        const manutencao = manutencoes.find(
+          (m) => m.id_manutencao === manutencaoId
+        );
+
+        if (manutencao) {
+          document.getElementById("id_manutencao").value =
+            manutencao.id_manutencao;
+          document.getElementById("descricao_servico").value =
+            manutencao.descricao_servico;
+          document.getElementById("data_manutencao").value =
+            manutencao.data_manutencao;
+          document.getElementById("empresa_manutencao").value =
+            manutencao.maintenanceCompany.id_empresa_manutencao;
+
+          editManutencaoId = manutencao.id_manutencao;
+          document.getElementById("submitBtn").innerText = "Atualizar";
+        }
+      }
+
+      async function excluirManutencao(manutencaoId) {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          API_URL + "maintenances/" + manutencaoId,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          await listarManutencoes();
+        } else {
+          alert("Erro ao excluir a manutenção. Por favor, tente novamente.");
+        }
+      }
+
+      async function listarManutencoes() {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(API_URL + "maintenances", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          manutencoes = await response.json();
+
+          const companiesResponse = await fetch(
+            API_URL + "maintenance-companies",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (companiesResponse.ok) {
+            const companies = await companiesResponse.json();
+
+            const selectElement = document.getElementById("empresa_manutencao");
+            selectElement.innerHTML = "";
+
+            companies.forEach((company) => {
+              const option = document.createElement("option");
+              option.value = company.id_empresa_manutencao;
+              option.textContent = company.nome_empresa;
+              selectElement.appendChild(option);
+            });
+          }
+
+          const tableBody = document.getElementById("manutencoesTableBody");
+          tableBody.innerHTML = "";
+
+          manutencoes.forEach((manutencao) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${manutencao.id_manutencao}</td>
+              <td>${manutencao.descricao_servico}</td>
+              <td>${manutencao.data_manutencao}</td>
+              <td>${manutencao.maintenanceCompany.nome_empresa}</td>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm" onclick="editarManutencao(${manutencao.id_manutencao})">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="excluirManutencao(${manutencao.id_manutencao})">Excluir</button>
+              </td>
+            `;
+
+            tableBody.appendChild(row);
+          });
+        } else {
+          alert("Erro ao listar as manutenções. Por favor, tente novamente.");
+        }
+      }
+
+      function limparFormulario() {
+        document.getElementById("manutencaoForm").reset();
+        editManutencaoId = null;
+        document.getElementById("submitBtn").innerText = "Cadastrar";
+      }
+
+      document.getElementById("manutencaoForm").addEventListener(
+        "submit",
+        cadastrarManutencao
+      );
+      document.getElementById("cancelBtn").addEventListener(
+        "click",
+        limparFormulario
+      );
+
+      listarManutencoes();
+    </script>
+  </body>
+</html>
