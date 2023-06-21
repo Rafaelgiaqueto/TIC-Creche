@@ -78,33 +78,54 @@
         </div>
       </div>
 
-      <div class="row mt-5">
-        <div class="col-md-8">
-          <h3>Listagem de Empresas de Manutenção</h3>
-          <table class="table mt-4">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Técnico Responsável</th>
-                <th>Telefone</th>
-                <th>Email</th>
-                <th>CNPJ</th>
-                <th>Rua</th>
-                <th>Número</th>
-                <th>Complemento</th>
-                <th>Bairro</th>
-                <th>Cidade</th>
-                <th>Estado</th>
-                <th>País</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="empresasTableBody"></tbody>
-          </table>
+      <style>
+        body, html {
+          height: 100%;
+        }
+    
+        .container {
+          min-height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+    
+        .table-wrapper {
+          flex-grow: 1;
+          overflow-y: auto;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Listagem de Empresas de Manutenção</h3>
+            <div class="table-wrapper">
+              <table class="table mt-4">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Técnico Responsável</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>CNPJ</th>
+                    <th>Rua</th>
+                    <th>Número</th>
+                    <th>Complemento</th>
+                    <th>Bairro</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                    <th>País</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="empresasTableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -119,7 +140,7 @@
       async function cadastrarEmpresa(event) {
         event.preventDefault();
 
-        const empresaId = document.getElementById("empresaId").value || null;
+        const empresaId = document.getElementById("empresaId").value ;
         const nome_empresa = document.getElementById("nome_empresa").value;
         const tecnico_responsavel = document.getElementById(
           "tecnico_responsavel"
@@ -231,31 +252,25 @@
 
       // Função para editar uma empresa
       function editarEmpresa(empresaId) {
-        const empresa = empresas.find(
-          (e) => e.id_empresa_manutencao === empresaId
-        );
-        if (empresa) {
-          document.getElementById("empresaId").value =
-            empresa.id_empresa_manutencao;
-          document.getElementById("nome_empresa").value =
-            empresa.nome_empresa;
-          document.getElementById("tecnico_responsavel").value =
-            empresa.tecnico_responsavel;
-          document.getElementById("telefone").value = empresa.telefone;
-          document.getElementById("email").value = empresa.email;
-          document.getElementById("cnpj").value = empresa.cnpj;
-          document.getElementById("rua").value = empresa.rua;
-          document.getElementById("numero").value = empresa.numero;
-          document.getElementById("complemento").value =
-            empresa.complemento;
-          document.getElementById("bairro").value = empresa.bairro;
-          document.getElementById("cidade").value = empresa.cidade;
-          document.getElementById("estado").value = empresa.estado;
-          document.getElementById("pais").value = empresa.pais;
+  const empresa = empresas.find((e) => e.id_empresa_manutencao === empresaId);
+  if (empresa) {
+    document.getElementById("empresaId").value = empresaId;
+    document.getElementById("nome_empresa").value = empresa.nome_empresa;
+    document.getElementById("tecnico_responsavel").value = empresa.tecnico_responsavel;
+    document.getElementById("telefone").value = empresa.telefone;
+    document.getElementById("email").value = empresa.email;
+    document.getElementById("cnpj").value = empresa.cnpj;
+    document.getElementById("rua").value = empresa.rua;
+    document.getElementById("numero").value = empresa.numero;
+    document.getElementById("complemento").value = empresa.complemento;
+    document.getElementById("bairro").value = empresa.bairro;
+    document.getElementById("cidade").value = empresa.cidade;
+    document.getElementById("estado").value = empresa.estado;
+    document.getElementById("pais").value = empresa.pais;
 
-          $("#empresaModal").modal("show");
-        }
-      }
+    $("#empresaModal").modal("show");
+  }
+}
 
       // Função para excluir uma empresa
       async function excluirEmpresa(empresaId) {
