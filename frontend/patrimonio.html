@@ -65,7 +65,9 @@
                 </option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
+            <button type="submit" class="btn btn-primary" id="salvarButton">
+              Cadastrar
+            </button>
           </form>
         </div>
       </div>
@@ -97,6 +99,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script>
       let categorias = [];
+      let locaisPatrimonio = [];
       async function cadastrarPatrimonio(event) {
         event.preventDefault();
         const nome_patrimonio =
@@ -170,62 +173,74 @@
       }
       async function carregarPatrimonios() {
         const response = await fetch("http://localhost:3001/patrimony");
-        const patrimonios = await response.json();
-        const tbody = document.getElementById("patrimonioTableBody");
-        tbody.innerHTML = "";
-        patrimonios.forEach(async (patrimonio) => {
-          const tr = document.createElement("tr");
-          const tdId = document.createElement("td");
-          tdId.innerText = patrimonio.id_patrimonio;
-          tr.appendChild(tdId);
-          const tdNome = document.createElement("td");
-          tdNome.innerText = patrimonio.nome_patrimonio;
-          tr.appendChild(tdNome);
-          const tdDescricao = document.createElement("td");
-          tdDescricao.innerText = patrimonio.descricao;
-          tr.appendChild(tdDescricao);
-          const tdHistorico = document.createElement("td");
-          tdHistorico.innerText = patrimonio.historico_manutencao;
-          tr.appendChild(tdHistorico);
-          const tdNrSerie = document.createElement("td");
-          tdNrSerie.innerText = patrimonio.nr_serie;
-          tr.appendChild(tdNrSerie);
-          const tdCategoria = document.createElement("td");
-          tdCategoria.innerText = await obterNomeCategoria(
-            patrimonio.id_categoria
-          );
-          tr.appendChild(tdCategoria);
-          const tdLocal = document.createElement("td");
-          tdLocal.innerText = await obterNomeLocalPatrimonio(
-            patrimonio.id_local_patrimonio
-          );
-          tr.appendChild(tdLocal);
-          const tdAcoes = document.createElement("td");
-          const btnExcluir = document.createElement("button");
-          btnExcluir.innerText = "Excluir";
-          btnExcluir.classList.add("btn", "btn-danger", "mr-2");
-          btnExcluir.onclick = () =>
-            excluirPatrimonio(patrimonio.id_patrimonio);
-          tdAcoes.appendChild(btnExcluir);
-          const btnEditar = document.createElement("button");
-          btnEditar.innerText = "Editar";
-          btnEditar.classList.add("btn", "btn-primary");
-          btnEditar.onclick = () => editarPatrimonio(patrimonio);
-          tdAcoes.appendChild(btnEditar);
-          tr.appendChild(tdAcoes);
-          tbody.appendChild(tr);
-        });
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          const patrimonios = data;
+          const tbody = document.getElementById("patrimonioTableBody");
+          tbody.innerHTML = "";
+
+          for (const patrimonio of patrimonios) {
+            const tr = document.createElement("tr");
+            const tdId = document.createElement("td");
+            tdId.innerText = patrimonio.id_patrimonio;
+            tr.appendChild(tdId);
+
+            const tdNome = document.createElement("td");
+            tdNome.innerText = patrimonio.nome_patrimonio;
+            tr.appendChild(tdNome);
+
+            const tdDescricao = document.createElement("td");
+            tdDescricao.innerText = patrimonio.descricao;
+            tr.appendChild(tdDescricao);
+
+            const tdHistorico = document.createElement("td");
+            tdHistorico.innerText = patrimonio.historico_manutencao;
+            tr.appendChild(tdHistorico);
+
+            const tdNrSerie = document.createElement("td");
+            tdNrSerie.innerText = patrimonio.nr_serie;
+            tr.appendChild(tdNrSerie);
+
+            const tdCategoria = document.createElement("td");
+            tdCategoria.innerText = patrimonio.category.nome_categoria;
+            tr.appendChild(tdCategoria);
+
+            const tdLocal = document.createElement("td");
+            tdLocal.innerText = patrimonio.localPatrimony.nome_local;
+            tr.appendChild(tdLocal);
+
+            const tdAcoes = document.createElement("td");
+            const btnExcluir = document.createElement("button");
+            btnExcluir.innerText = "Excluir";
+            btnExcluir.classList.add("btn", "btn-danger", "mr-2");
+
+            btnExcluir.onclick = () =>
+              excluirPatrimonio(patrimonio.id_patrimonio);
+            tdAcoes.appendChild(btnExcluir);
+
+            const btnEditar = document.createElement("button");
+            btnEditar.innerText = "Editar";
+            btnEditar.classList.add("btn", "btn-primary");
+
+            btnEditar.onclick = () => editarPatrimonio(patrimonio);
+            tdAcoes.appendChild(btnEditar);
+            tr.appendChild(tdAcoes);
+            tbody.appendChild(tr);
+          }
+        } else {
+          console.log("Erro ao carregar patrimônios:", data);
+        }
       }
+
       async function obterNomeCategoria(id_categoria) {
-        const response = await fetch(
-          `http://localhost:3001/categories/${id_categoria}`
+        const categoria = categorias.find(
+          (categoria) => categoria.id_categoria === id_categoria
         );
-        const categoria = await response.json();
-        return categoria.nome_categoria;
+        return categoria ? categoria.nome_categoria : "";
       }
+
       async function obterNomeLocalPatrimonio(id_local_patrimonio) {
-        const response = await fetch(`http://localhost:3001/local-patrimony/`);
-        const locaisPatrimonio = await response.json();
         const localPatrimonio = locaisPatrimonio.find(
           (local) => local.id_local_patrimonio === id_local_patrimonio
         );
@@ -272,11 +287,13 @@
           patrimonio.id_local_patrimonio;
 
         const salvarButton = document.getElementById("salvarButton");
-        salvarButton.textContent = "Atualizar";
+        salvarButton.textContent = "Salvar";
+        salvarButton.setAttribute("data-patrimonio-id", patrimonio.id_patrimonio);
         salvarButton.removeEventListener("click", cadastrarPatrimonio);
-        salvarButton.addEventListener("click", () =>
-          atualizarPatrimonio(patrimonio.id_patrimonio)
-        );
+        salvarButton.addEventListener("click", function (event) {
+          event.preventDefault();
+          atualizarPatrimonio(patrimonio.id_patrimonio); // Chamada para atualizar o patrimônio com o ID correto
+        });
       }
 
       async function atualizarPatrimonio(idPatrimonio) {

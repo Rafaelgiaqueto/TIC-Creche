@@ -30,17 +30,17 @@ export class AddnewTables1687269246004 implements MigrationInterface {
         id_avaria SERIAL PRIMARY KEY,
         descricao VARCHAR(255) NOT NULL,
         data_avaria DATE NOT NULL,
-        id_patrimonio INTEGER REFERENCES tb_patrimonio(id_patrimonio) ON DELETE CASCADE,
+        id_patrimonio INTEGER REFERENCES tb_patrimonios(id_patrimonio) ON DELETE CASCADE,
         id_manutencao INTEGER REFERENCES tb_manutencao(id_manutencao) ON DELETE CASCADE
       );
 
-      ALTER TABLE tb_avarias ADD CONSTRAINT FK_tb_avarias_tb_patrimonio FOREIGN KEY (id_patrimonio) REFERENCES tb_patrimonio(id_patrimonio) ON DELETE CASCADE;
+      ALTER TABLE tb_avarias ADD CONSTRAINT FK_tb_avarias_tb_patrimonios FOREIGN KEY (id_patrimonio) REFERENCES tb_patrimonios(id_patrimonio) ON DELETE CASCADE;
       ALTER TABLE tb_avarias ADD CONSTRAINT FK_tb_avarias_tb_manutencao FOREIGN KEY (id_manutencao) REFERENCES tb_manutencao(id_manutencao) ON DELETE CASCADE;
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`ALTER TABLE tb_avarias DROP CONSTRAINT FK_tb_avarias_tb_patrimonio;`);
+    await queryRunner.query(`ALTER TABLE tb_avarias DROP CONSTRAINT FK_tb_avarias_tb_patrimonios;`);
     await queryRunner.query(`ALTER TABLE tb_avarias DROP CONSTRAINT FK_tb_avarias_tb_manutencao;`);
     await queryRunner.query(`DROP TABLE tb_avarias;`);
     await queryRunner.query(`DROP TABLE tb_manutencao;`);
