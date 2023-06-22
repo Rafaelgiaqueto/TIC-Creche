@@ -61,8 +61,8 @@ Projeto desenvolvido para controle de patrimônio da creche NV Sociedade Solidá
 - Abra seu gerenciador de banco de dados e crie um database com o nome de sua escolha;
 
 - Dentro da pasta backend no arquivo ".env" substitua as credencias pelas suas:
-DB_PASS = NOME DO BANCO QUE CRIOU
-DB_NAME = SENHA QUE UTILIZA PARA ENTRAR EM SEU GERENCIADOR;
+DB_NAME = NOME DO BANCO QUE CRIOU
+DB_PASS = SENHA QUE UTILIZA PARA ENTRAR EM SEU GERENCIADOR;
 
 - Baixar um cliente que suporte um SGBD para ver em uma interface mais bonita o cadastro das entidades assim como seus relacionamentos, recomendo Beekeper portable, aqui está uma instrução;
   - Exemplo de como conectar ao Beekeper:
