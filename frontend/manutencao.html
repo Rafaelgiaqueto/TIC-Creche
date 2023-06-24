@@ -230,17 +230,8 @@
       }
     }
 
-    function formatarData(data) {
-      const partesData = data.split("T")[0].split("-");
-      const ano = partesData[0];
-      const mes = partesData[1];
-      const dia = partesData[2];
-      return `${dia}/${mes}/${ano}`;
-    }
-
     async function listarManutencoes() {
       const token = localStorage.getItem("token");
-      
 
       const response = await fetch(API_URL + "maintenances", {
         headers: {
@@ -278,12 +269,11 @@
         tableBody.innerHTML = "";
 
         manutencoes.forEach((manutencao) => {
-          const formattedDate = formatarData(manutencao.data_manutencao);
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${manutencao.id_manutencao}</td>
             <td>${manutencao.descricao_servico}</td>
-            <td>${formattedDate}</td>
+            <td>${manutencao.data_manutencao}</td>
             <td>${manutencao.maintenanceCompany.nome_empresa}</td>
             <td>
               <button type="button" class="btn btn-primary btn-sm" onclick="editarManutencao(${manutencao.id_manutencao})">Editar</button>

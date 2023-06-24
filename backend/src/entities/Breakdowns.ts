@@ -26,4 +26,6 @@ export class Breakdowns {
   })
   @JoinColumn({ name: 'id_manutencao' })
   maintenance: Maintenance;
+  id_patrimonio: any;
+  id_manutencao: any;
 }
