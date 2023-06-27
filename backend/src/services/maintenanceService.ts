@@ -4,22 +4,23 @@ import { MaintenanceCompanyRepository } from "../repositories/MaintenanceCompany
 
 export class MaintenanceService {
   async createMaintenance(companyId: string, maintenanceData: any) {
-
     const maintenanceCompany = await MaintenanceCompanyRepository.findOne({
-      where: { id_empresa_manutencao: companyId },
+      where: { id_empresa_manutencao: maintenanceData.id_empresa_manutencao },
     });
-
+  
     if (!maintenanceCompany) {
       throw new BadRequestError("Empresa não encontrada");
     }
-
+  
     const newMaintenance = MaintenanceRepository.create({
       ...maintenanceData,
       maintenanceCompany,
     });
-
+  
     await MaintenanceRepository.save(newMaintenance);
   }
+  
+  
 
   async getAllMaintenances() {
     const maintenances = await MaintenanceRepository.createQueryBuilder(
@@ -52,27 +53,28 @@ export class MaintenanceService {
   async updateMaintenanceById(id_manutencao: string, maintenanceData: any) {
     const maintenance = await MaintenanceRepository.findOne({
       where: { id_manutencao },
+      relations: ["maintenanceCompany"],
     });
-
+  
     if (!maintenance) {
       throw new NotFoundError("Manutenção não encontrada.");
     }
-
-    const MaintenanceCompany = await MaintenanceCompanyRepository.findOne({
+  
+    const maintenanceCompany = await MaintenanceCompanyRepository.findOne({
       where: { id_empresa_manutencao: maintenanceData.id_empresa_manutencao },
     });
-
-    if (!MaintenanceCompany) {
+  
+    if (!maintenanceCompany) {
       throw new BadRequestError("Empresa não encontrada");
     }
-
-    Object.assign(maintenance, {
-      ...maintenanceData,
-      MaintenanceCompany,
-    });
-
+  
+    maintenance.descricao_servico = maintenanceData.descricao_servico;
+    maintenance.data_manutencao = maintenanceData.data_manutencao;
+    maintenance.maintenanceCompany = maintenanceCompany;
+  
     await MaintenanceRepository.save(maintenance);
   }
+  
 
   async deleteMaintenance(id_manutencao: string) {
     const maintenance = await MaintenanceRepository.findOne({
