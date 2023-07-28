@@ -1,4 +1,5 @@
 # TIC-Creche
+** Projeto incompleto, no momento migrando o HTML para React.
 
 Projeto desenvolvido para controle de patrimônio da creche NV Sociedade Solidária
 
